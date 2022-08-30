@@ -36,7 +36,7 @@ from collections import namedtuple
 jax.config.update("jax_enable_x64", True)
 
 Model = namedtuple("Model", 
-                   ("β", "a_0", "a_1", "c", "γ", 
+                   ("β", "a_0", "a_1", "γ", "c",
                     "y_size", "z_size",
                     "y_grid", "z_grid", "Q"))
 
@@ -66,14 +66,16 @@ def create_investment_model_jax(model):
 
 def T_vectorized(v, jax_model):
     β, a_0, a_1, γ, c, y_size, z_size, y_grid, z_grid, Q = jax_model
-    y  = jnp.reshape(y_grid, (y_size, 1, 1, 1))
-    z  = jnp.reshape(z_grid, (1, z_size, 1, 1))
-    yp = jnp.reshape(y_grid, (1, 1, y_size, 1))
-    v  = jnp.reshape(v, (1, 1, y_size, z_size))  # v[ip, jp] -> v[i, j, ip, jp]
-    Q  = jnp.reshape(Q, (1, z_size, 1, z_size))  # Q[j, jp]  -> Q[i, j, ip, jp]
+    y  = jnp.reshape(y_grid, (y_size, 1, 1))
+    z  = jnp.reshape(z_grid, (1, z_size, 1))
+    yp = jnp.reshape(y_grid, (1, 1, y_size))
     R = (a_0 - a_1 * y + z - c) * y - γ * (yp - y)**2
-    C = β * jnp.sum(R + v * Q, axis=3)
-    return jnp.max(C, axis=2)
+
+    v = jnp.reshape(v, (1, 1, y_size, z_size))  # v[ip, jp] -> v[i, j, ip, jp]
+    Q = jnp.reshape(Q, (1, z_size, 1, z_size))  # Q[j, jp]  -> Q[i, j, ip, jp]
+    C = jnp.sum(v * Q, axis=3)                  # sum over jp
+
+    return jnp.max(R + β * C, axis=2)
 
 
 def B(i, j, ip, v, np_model):
