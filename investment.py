@@ -115,17 +115,17 @@ def get_greedy(v, model):
     return σ
 
 
-"Get the value v_σ of policy σ."
 @njit
 def get_value(σ, model):
+    "Get the value v_σ of policy σ."
     # Unpack and set up
     β, a_0, a_1, γ, c, y_size, z_size, y_grid, z_grid, Q = model
-    yn, zn = len(y_grid), len(z_grid)
-    n = yn * zn
-    # Function to extract (i, j) from m = i + (j-1)*yn"
+    ny, nz = len(y_grid), len(z_grid)
+    n = ny * nz
+    # Function to extract (i, j) from m = i + (j-1)*ny"
     def single_to_multi(m):
-        i = m // zn
-        j = m - zn * i
+        i = m // nz
+        j = m - nz * i
         return i, j
     # Allocate and create single index versions of P_σ and r_σ
     P_σ = np.zeros((n, n))
@@ -141,8 +141,7 @@ def get_value(σ, model):
     # Solve for the value of σ 
     v_σ = np.linalg.solve(np.identity(n) - β * P_σ, r_σ)
     # Return as multi-index array
-    return np.reshape(v_σ, (yn, zn))
-
+    return np.reshape(v_σ, (ny, nz))
 
 # == Solvers == #
 
@@ -152,11 +151,10 @@ def value_iteration(model, tol=1e-5):
     v_star = successive_approx(lambda v: T(v, model), vz, tolerance=tol)
     return get_greedy(v_star, model)
 
-
 def policy_iteration(model):
     "Howard policy iteration routine."
-    yn, zn = len(model.y_grid), len(model.z_grid)
-    σ = np.ones((yn, zn), dtype=np.int)
+    ny, nz = len(model.y_grid), len(model.z_grid)
+    σ = np.ones((ny, nz), dtype=np.int)
     i, error = 0, 1.0
     while error > 0:
         v_σ = get_value(σ, model)
@@ -166,7 +164,6 @@ def policy_iteration(model):
         i = i + 1
         print(f"Concluded loop {i} with error {error}.")
     return σ
-
 
 def optimistic_policy_iteration(model, tol=1e-5, m=100):
     "Implements the OPI routine."
@@ -180,6 +177,7 @@ def optimistic_policy_iteration(model, tol=1e-5, m=100):
         error = np.max(np.abs(v - last_v))
     return get_greedy(v, model)
 
+# == Plots == #
 
 def plot_policy(fontsize=12):
     model = create_investment_model()
