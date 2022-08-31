@@ -41,12 +41,12 @@ Model = namedtuple("Model",
                     "y_size", "z_size", "y_grid", "z_grid", "Q"))
 
 def create_investment_model(
-        r=0.04,                              # Interest rate
+        r=0.01,                              # Interest rate
         a_0=10.0, a_1=1.0,                   # Demand parameters
         γ=25.0, c=1.0,                       # Adjustment and unit cost 
         y_min=0.0, y_max=20.0, y_size=100,   # Grid for output
         ρ=0.9, ν=1.0,                        # AR(1) parameters
-        z_size=25):                          # Grid size for shock
+        z_size=200):                         # Grid size for shock
     """
     A function that takes in parameters and returns an instance of Model that
     contains data for the investment problem.
@@ -74,21 +74,21 @@ def B(i, j, ip, v, model):
     r = (a_0 - a_1 * y + z - c) * y - γ * (yp - y)**2
     return r + β * np.dot(v[ip, :], Q[j, :]) 
 
-@njit
+@njit(parallel=True)
 def T_σ(v, σ, model):
     "The policy operator."
     v_new = np.empty_like(v)
-    for i in range(model.y_size):
+    for i in prange(model.y_size):
         for j in range(model.z_size):
             v_new[i, j] = B(i, j, σ[i, j], v, model)
     return v_new
 
-@njit
+@njit(parallel=True)
 def T(v, model):
     "The Bellman operator."
     β, a_0, a_1, γ, c, y_size, z_size, y_grid, z_grid, Q = model
     v_new = np.empty_like(v)
-    for i in range(y_size):
+    for i in prange(y_size):
         for j in range(z_size):
             max_val = -np.inf
             for ip in range(y_size):
@@ -98,12 +98,12 @@ def T(v, model):
             v_new[i, j] = max_val
     return v_new
 
-@njit
+@njit(parallel=True)
 def get_greedy(v, model):
     "Compute a v-greedy policy."
     β, a_0, a_1, γ, c, y_size, z_size, y_grid, z_grid, Q = model
     σ = np.empty_like(v, dtype=int32)
-    for i in range(y_size):
+    for i in prange(y_size):
         for j in range(z_size):
             max_val = -np.inf
             for ip in range(y_size):
@@ -176,6 +176,30 @@ def optimistic_policy_iteration(model, tol=1e-5, m=100):
             v = T_σ(v, σ, model)
         error = np.max(np.abs(v - last_v))
     return get_greedy(v, model)
+
+
+# == Tests == #
+
+def quick_timing_test():
+    model = create_investment_model()
+    print("Starting HPI.")
+    qe.tic()
+    out = policy_iteration(model)
+    elapsed = qe.toc()
+    print(out)
+    print(f"HPI completed in {elapsed} seconds.")
+    print("Starting VFI.")
+    qe.tic()
+    out = value_iteration(model)
+    elapsed = qe.toc()
+    print(out)
+    print(f"VFI completed in {elapsed} seconds.")
+    print("Starting OPI.")
+    qe.tic()
+    out = optimistic_policy_iteration(model, m=5)
+    elapsed = qe.toc()
+    print(out)
+    print(f"OPI completed in {elapsed} seconds.")
 
 # == Plots == #
 

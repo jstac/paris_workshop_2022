@@ -19,9 +19,9 @@ def successive_approx(T,                     # Operator (callable)
             print(f"Completed iteration {k} with error {error}.")
         x = x_new
         k += 1
-    if k < max_iter:
+    if error > tolerance:
+        print(f"Warning: Iteration hit upper bound {max_iter}.")
+    elif verbose:
         print(f"Terminated successfully in {k} iterations.")
-    else:
-        print(f"Warning: Iteration hit max_iter bound {max_iter}.")
     return x
 
