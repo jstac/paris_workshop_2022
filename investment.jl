@@ -2,12 +2,12 @@ using QuantEcon, LinearAlgebra, IterTools
 include("s_approx.jl")
 
 function create_investment_model(; 
-        r=0.04,                              # Interest rate
+        r=0.01,                              # Interest rate
         a_0=10.0, a_1=1.0,                   # Demand parameters
         γ=25.0, c=1.0,                       # Adjustment and unit cost 
         y_min=0.0, y_max=20.0, y_size=100,   # Grid for output
         ρ=0.9, ν=1.0,                        # AR(1) parameters
-        z_size=25)                           # Grid size for shock
+        z_size=200)                           # Grid size for shock
     β = 1/(1+r) 
     y_grid = LinRange(y_min, y_max, y_size)  
     mc = tauchen(y_size, ρ, ν)
