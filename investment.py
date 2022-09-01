@@ -115,7 +115,7 @@ def get_greedy(v, model):
     return σ
 
 
-@njit
+@njit(parallel=True)
 def get_value(σ, model):
     "Get the value v_σ of policy σ."
     # Unpack and set up
@@ -130,7 +130,7 @@ def get_value(σ, model):
     # Allocate and create single index versions of P_σ and r_σ
     P_σ = np.zeros((n, n))
     r_σ = np.zeros(n)
-    for m in range(n):
+    for m in prange(n):
         i, j = single_to_multi(m)
         y, z, yp = y_grid[i], z_grid[j], y_grid[σ[i, j]]
         r_σ[m] = (a_0 - a_1 * y + z - c) * y - γ * (yp - y)**2

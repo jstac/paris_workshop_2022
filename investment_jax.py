@@ -68,7 +68,10 @@ def B(v, constants, sizes, arrays):
 
 
 def compute_r_σ(σ, constants, sizes, arrays):
-    "Compute the array r_σ[i, j]."
+    """
+    Compute the array r_σ[i, j] = r[i, j, σ[i, j]], which gives current
+    rewards given policy σ.
+    """
 
     # Unpack model
     β, a_0, a_1, γ, c = constants
@@ -172,15 +175,21 @@ def get_value(σ, constants, sizes, arrays):
 
 # == Matrix versions == #
 
-def T_σ_matrix_version(v, σ, constants, sizes, arrays):
-    "The σ-policy operator, single index version."
+
+
+
+def compute_P_σ(σ, constants, sizes, arrays):
+    """
+    Compute the transition probabilities across states as a multi-index array
+
+        P_σ[i, j, ip, jp] = (σ[i, j] == ip) * Q[j, jp]
+
+    """
 
     # Unpack model
     β, a_0, a_1, γ, c = constants
     y_size, z_size = sizes
     y_grid, z_grid, Q = arrays
-
-    r_σ = compute_r_σ(σ, constants, sizes, arrays)
 
     yp_idx = jnp.arange(y_size)
     yp_idx = jnp.reshape(yp_idx, (1, 1, y_size, 1))
@@ -188,15 +197,7 @@ def T_σ_matrix_version(v, σ, constants, sizes, arrays):
     A = jnp.where(σ == yp_idx, 1, 0)
     Q = jnp.reshape(Q, (1, z_size, 1, z_size))
     P_σ = A * Q
-
-    n = y_size * z_size
-    P_σ = jnp.reshape(P_σ, (n, n))
-    r_σ = jnp.reshape(r_σ, n)
-    v = jnp.reshape(v, n)
-    new_v = r_σ + β * P_σ @ v
-
-    # Return as multi-index array
-    return jnp.reshape(new_v, (y_size, z_size))
+    return P_σ
 
 
 def get_value_matrix_version(σ, constants, sizes, arrays):
@@ -217,21 +218,45 @@ def get_value_matrix_version(σ, constants, sizes, arrays):
     y_size, z_size = sizes
     y_grid, z_grid, Q = arrays
 
+    # Obtain ordinary (multi-index) versions of r_σ and P_σ 
     r_σ = compute_r_σ(σ, constants, sizes, arrays)
+    P_σ = compute_P_σ(σ, constants, sizes, arrays)
 
-    yp_idx = jnp.arange(y_size)
-    yp_idx = jnp.reshape(yp_idx, (1, 1, y_size, 1))
-    σ = jnp.reshape(σ, (y_size, z_size, 1, 1))
-    A = jnp.where(σ == yp_idx, 1, 0)
-    Q = jnp.reshape(Q, (1, z_size, 1, z_size))
-    P_σ = A * Q
-
+    # Reshape r_σ and P_σ for a single index state
     n = y_size * z_size
     P_σ = jnp.reshape(P_σ, (n, n))
     r_σ = jnp.reshape(r_σ, n)
+
+    # Solve
     v_σ = jnp.linalg.solve(np.identity(n) - β * P_σ, r_σ)
+
     # Return as multi-index array
     return jnp.reshape(v_σ, (y_size, z_size))
+
+
+def T_σ_matrix_version(v, σ, constants, sizes, arrays):
+    "The σ-policy operator, single index version."
+
+    # Unpack model
+    β, a_0, a_1, γ, c = constants
+    y_size, z_size = sizes
+    y_grid, z_grid, Q = arrays
+
+    # Obtain ordinary (multi-index) versions of r_σ and P_σ 
+    r_σ = compute_r_σ(σ, constants, sizes, arrays)
+    P_σ = compute_P_σ(σ, constants, sizes, arrays)
+
+    # Reshape r_σ and P_σ for a single index state
+    n = y_size * z_size
+    P_σ = jnp.reshape(P_σ, (n, n))
+    r_σ = jnp.reshape(r_σ, n)
+    v = jnp.reshape(v, n)
+
+    # Iterate with T_σ using matrix routines
+    new_v = r_σ + β * P_σ @ v
+
+    # Return as multi-index array
+    return jnp.reshape(new_v, (y_size, z_size))
 
 
 # == JIT compiled versions == #
@@ -242,12 +267,12 @@ T = jax.jit(T, static_argnums=(2,))
 get_greedy = jax.jit(get_greedy, static_argnums=(2,))
 
 get_value = jax.jit(get_value, static_argnums=(2,))
-get_value = jax.jit(get_value, static_argnums=(2,))
 
-T_σ = jax.jit(T_σ, static_argnums=(3,))
 T_σ = jax.jit(T_σ, static_argnums=(3,))
 R_σ = jax.jit(R_σ, static_argnums=(3,))
 
+get_value_matrix_version = jax.jit(get_value_matrix_version, static_argnums=(2,))
+T_σ_matrix_version = jax.jit(T_σ_matrix_version, static_argnums=(3,))
 
 # == Solvers == #
 
@@ -261,15 +286,20 @@ def value_iteration(model, tol=1e-5):
     v_star = successive_approx(_T, vz, tolerance=tol)
     return get_greedy(v_star, constants, sizes, arrays)
 
-def policy_iteration(model):
+def policy_iteration(model, matrix_version=False):
     "Howard policy iteration routine."
 
     constants, sizes, arrays = model
+    if matrix_version:
+        _get_value = get_value_matrix_version
+    else:
+        _get_value = get_value
+
     vz = jnp.zeros(sizes)
     σ = jnp.zeros(sizes, dtype=int)
     i, error = 0, 1.0
     while error > 0:
-        v_σ = get_value(σ, constants, sizes, arrays)
+        v_σ = _get_value(σ, constants, sizes, arrays)
         σ_new = get_greedy(v_σ, constants, sizes, arrays)
         error = jnp.max(np.abs(σ_new - σ))
         σ = σ_new
@@ -277,16 +307,21 @@ def policy_iteration(model):
         print(f"Concluded loop {i} with error {error}.")
     return σ
 
-def optimistic_policy_iteration(model, tol=1e-5, m=10):
+def optimistic_policy_iteration(model, tol=1e-5, m=10, matrix_version=False):
     "Implements the OPI routine."
     constants, sizes, arrays = model
+    if matrix_version:
+        _T_σ = T_σ_matrix_version
+    else:
+        _T_σ = T_σ
+
     v = jnp.zeros(sizes)
     error = tol + 1
     while error > tol:
         last_v = v
         σ = get_greedy(v, constants, sizes, arrays)
         for _ in range(m):
-            v = T_σ(v, σ, constants, sizes, arrays)
+            v = _T_σ(v, σ, constants, sizes, arrays)
         error = jnp.max(np.abs(v - last_v))
     return get_greedy(v, constants, sizes, arrays)
 

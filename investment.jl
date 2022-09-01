@@ -1,4 +1,6 @@
 using QuantEcon, LinearAlgebra, IterTools
+import Base.Threads.@threads
+
 include("s_approx.jl")
 
 function create_investment_model(; 
@@ -7,7 +9,7 @@ function create_investment_model(;
         γ=25.0, c=1.0,                       # Adjustment and unit cost 
         y_min=0.0, y_max=20.0, y_size=100,   # Grid for output
         ρ=0.9, ν=1.0,                        # AR(1) parameters
-        z_size=200)                           # Grid size for shock
+        z_size=200)                          # Grid size for shock
     β = 1/(1+r) 
     y_grid = LinRange(y_min, y_max, y_size)  
     mc = tauchen(y_size, ρ, ν)
@@ -36,8 +38,10 @@ end
 function T_σ(v, σ, model)
     y_idx, z_idx = (eachindex(g) for g in (model.y_grid, model.z_grid))
     v_new = similar(v)
-    for (i, j) in product(y_idx, z_idx)
-        v_new[i, j] = B(i, j, σ[i, j], v, model) 
+    @threads for i in y_idx
+        for j in z_idx
+            v_new[i, j] = B(i, j, σ[i, j], v, model) 
+        end
     end
     return v_new
 end
@@ -46,8 +50,10 @@ end
 function T(v, model)
     y_idx, z_idx = (eachindex(g) for g in (model.y_grid, model.z_grid))
     v_new = similar(v)
-    for (i, j) in product(y_idx, z_idx)
-        v_new[i, j] = maximum(B(i, j, k, v, model) for k in y_idx)
+    @threads for i in y_idx
+        for j in z_idx
+            v_new[i, j] = maximum(B(i, j, k, v, model) for k in y_idx)
+        end
     end
     return v_new
 end
@@ -56,8 +62,10 @@ end
 function get_greedy(v, model)
     y_idx, z_idx = (eachindex(g) for g in (model.y_grid, model.z_grid))
     σ = Matrix{Int32}(undef, length(y_idx), length(z_idx))
-    for (i, j) in product(y_idx, z_idx)
-        _, σ[i, j] = findmax(B(i, j, k, v, model) for k in y_idx)
+    @threads for i in y_idx
+        for j in z_idx
+            _, σ[i, j] = findmax(B(i, j, k, v, model) for k in y_idx)
+        end
     end
     return σ
 end
@@ -82,7 +90,7 @@ function get_value(σ, model)
     # Allocate and create single index versions of P_σ and r_σ
     P_σ = zeros(n, n)
     r_σ = zeros(n)
-    for m in 1:n
+    @threads for m in 1:n
         i, j = single_to_multi(m)
         y, z, y′ = y_grid[i], z_grid[j], y_grid[σ[i, j]]
         r_σ[m] = (a_0 - a_1 * y + z - c) * y - γ * (y′ - y)^2
@@ -131,8 +139,25 @@ function optimistic_policy_iteration(model; tol=1e-5, m=100)
     return get_greedy(v, model)
 end
 
+# == Tests == #
 
-# Plots
+function quick_timing_test()
+    model = create_investment_model()
+    println("Starting HPI.")
+    elapsed = @elapsed out = policy_iteration(model)
+    println(out)
+    println("HPI completed in $elapsed seconds.")
+    println("Starting VFI.")
+    elapsed = @elapsed out = value_iteration(model)
+    println(out)
+    println("VFI completed in $elapsed seconds.")
+    println("Starting OPI.")
+    elapsed = @elapsed out = optimistic_policy_iteration(model, m=5)
+    println("OPI completed in $elapsed seconds.")
+end
+
+
+# == Plots == #
 
 using PyPlot
 using LaTeXStrings
