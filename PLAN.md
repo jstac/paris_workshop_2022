@@ -1,28 +1,44 @@
 
-Quick introduction to Python: Functions, classes, everything is an object
+Part 1  (Python + NumPy, SciPy)
 
-- amalgamate relevant lectures
-- Python vs Julia vs Fortran speed test (?)
+- Quick introduction to Python
+    - Functions, classes, everything is an object
+    - amalgamate relevant lectures
+- NumPy, Matplotlib, SciPy
+    - amalgamate relevant lectures
+- Numba 
+    - Python vs Julia vs Fortran speed test (?)
 
+Part 2  (Applications)
 
-Quick introduction to NumPy, Matplotlib, SciPy, Numba, JAX
-
-- One or two notebooks, subset of QE lectures on these topics
-- Equilibrium, n-D equilibrium
-- European option
+- Equilibrium
+- European option w/o JAX
 - Successive approximation and Newton's method applied to Solow
+- McCall Job search
 
+Part 3 (Dynamic Programming)
 
-A slide-based lecture on dynamic programming 
+- A slide-based lecture on dynamic programming 
 
-- RDPs
-- Theory
-- Algorithms
+    - RDPs
+    - Theory
+    - Algorithms
 
+- Application: Optimal investment
 
-Examples
+    - Code in NumPy / Numba
 
-- Optimal savings
-- Optimal investment
+Part 4
+
+- JAX (subset of QE lectures on these topics)
+
+    - intro to JAX
+    - European options with JAX
+    - n-D equilibrium
+
+- JAX for DP
+
+    - Optimal investment but now with JAX
+    - Optimal savings
 
 
