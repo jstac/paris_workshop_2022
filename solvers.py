@@ -5,12 +5,8 @@ def successive_approx(T,                     # Operator (callable)
                       max_iter=10_000,       # Max iteration bound
                       print_step=25,         # Print at multiples
                       verbose=False):        
-    """
-    Implements successive approximation by iterating on the operator T.
-
-    """
     x = x_0
-    error = np.inf
+    error = tolerance + 1
     k = 1
     while error > tolerance and k <= max_iter:
         x_new = T(x)

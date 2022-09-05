@@ -28,7 +28,9 @@
             \vspace{0.3em}
         \item Fixed point theory
             \vspace{0.3em}
-        \item Infinite horizon job search
+        \item Algorithms
+            \vspace{0.3em}
+        \item Job search
     \end{itemize}
 
             \vspace{0.3em}
@@ -104,7 +106,29 @@
     \end{equation*}
     %
 
+    \vspace{1em}
+    \vspace{1em}
     How can we extend this beyond one dimension?
+
+    \vspace{1em}
+    \begin{itemize}
+        \item When does $x = Ax + b$ have a unique solution?
+        \vspace{1em}
+        \item How can we compute it?
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+
+    Recall that $\lambda \in \CC$ is an eigenvalue of $n \times n$ matrix $A$ if
+    %
+    \begin{equation*}
+        A e = \lambda e
+    \end{equation*}
+    %
+    for some nonzero $e \in \CC^n$.
 
     \vspace{1em}
     We define the \navy{spectral radius} of square matrix $A$ as
@@ -114,6 +138,8 @@
     \end{equation*}
     %
 
+    \vspace{1em}
+    \vspace{1em}
     \emp{Key idea}: 
     %
     \begin{itemize}
@@ -121,32 +147,37 @@
     \end{itemize}
 
 
-\end{frame}
 
+    
+\end{frame}
 
 \begin{frame}
     \frametitle{Neumann Series Lemma}
 
-    Suppose $b$ is a column vector in $\RR^n$ and $A$ is $n \times n$ 
+    Suppose 
+    %
+    \begin{itemize}
+        \item $b$ is $n \times 1$ and $A$ is $n \times n$ 
+        \item $I$ is the $n \times n$ identity matrix
+    \end{itemize}
 
     \vspace{0.5em}
-    Let $I$ be the $n \times n$ identity matrix
 
     \vspace{0.5em}
     {\bf Theorem.} 
     If $r(A) < 1$, then
     %
     \begin{enumerate}
-        \item $I - A$ is nonsingular, 
+        \item $I - A$ is nonsingular 
         \vspace{0.5em}
-        \item the sum $\sum_{k \geq 0} A^k$ converges, 
+        \item $\sum_{k \geq 0} A^k$ converges 
         \vspace{0.5em}
-        \item $(I - A)^{-1} = \sum_{k \geq 0} A^k$, and
+        \item $(I - A)^{-1} = \sum_{k \geq 0} A^k$ and
         \vspace{0.5em}
-        \item the vector equation $x = A x + b$ has the unique solution 
+        \item $x = A x + b$ has the unique solution 
             %
             \begin{equation*}
-                x^* := (I - A)^{-1} b = \sum_{k \geq 0} A^k b
+                x^* := (I - A)^{-1} b 
             \end{equation*}
             %
     \end{enumerate}
@@ -158,22 +189,29 @@
     
     Intuitive idea: with $S := \sum_{k \geq 0} A^k$, we have
     %
-    \begin{equation*}
+    \begin{align*}
         I + AS 
-        = I + A (I + A + \cdots)
-        = I + A + A^2 + \cdots 
-        = S
-    \end{equation*}
+        & = I + A (I + A + \cdots)
+        \\
+        & = I + A + A^2 + \cdots 
+        \\
+        & = S
+    \end{align*}
     %
 
     Rearranging $I + AS = S$ gives $S = (I - A)^{-1}$
             \vspace{0.5em}
-
-    The equation $x = Ax + b$ is equivalent to $(I - A)x = b$
             \vspace{0.5em}
 
-    Unique solution is $x^* = (I-A)^{-1} b = S b$, as claimed
-            \vspace{0.5em}
+    \begin{equation*}
+        \fore
+        x = Ax + b
+        \; \iff \; 
+        (I - A)x = b
+        \; \iff \; 
+        x^* = (I-A)^{-1} b
+    \end{equation*}
+
 
 \end{frame}
 
@@ -181,10 +219,11 @@
 \begin{frame}
     \frametitle{Fixed Points}    
 
-    To solve more complex equations we use \emp{fixed point theory}
+    To solve \underline{nonlinear} equations we use fixed point theory
 
             \vspace{0.4em}
-    Recall that, if $S$ is any set then
+            \vspace{0.4em}
+    Recall: if $S$ is any set then
     %
     \begin{itemize}
         \item $T$ is a \navy{self-map} on $S$ if $T$ maps $S$ into itself
@@ -194,14 +233,15 @@
     \end{itemize}
 
             \vspace{0.4em}
-    \Eg Every $x$ in set $S$ is fixed under the \navy{identity map}
+            \vspace{0.4em}
+    \Egs 
     %
-    \begin{equation*}
-        I \colon x \mapsto x
-    \end{equation*}
-
-    \vspace{1em}
-    \Eg If $S = \NN$ and $Tx = x+1$, then $T$ has no fixed point
+    \begin{itemize}
+        \item Every $x$ in $S$ is fixed for the \navy{identity map}
+            $I \colon x \mapsto x$
+            \vspace{0.4em}
+        \item If $S = \NN$ and $Tx = x+1$, then $T$ has no fixed point
+    \end{itemize}
 
 
 \end{frame}
@@ -209,20 +249,14 @@
 
 \begin{frame}
     
-    \Eg If $S = \RR$ and $Tx = x^2$, then $T$ has fixed points at $0, 1$
-
-    \vspace{1em}
-    \Eg If $S = \RR^n$ and $Tx = Ax + b$,  then
+    \Egs
     %
-    \begin{equation*}
-        r(A) < 1 
-        \; \implies \;
-        x^* := (I-A)^{-1} b 
-        \text{ is the unique f.p.\ of $T$ in $S$}
-    \end{equation*}
+    \begin{itemize}
+        \item If $S = \RR$ and $Tx = x^2$, then $T$ has fixed points at $0, 1$
+        \vspace{1em}
+        \item If $S \subset \RR$,  $Tx =x$ $\iff$ $T$ meets the 45 degree line
+    \end{itemize}
 
-    \vspace{1em}
-    \Eg If $S \subset \RR$,  $Tx =x$ $\iff$ $T$ meets the 45 degree line
 
 \end{frame}
 
@@ -242,20 +276,12 @@
 
 \begin{frame}
 
-    Given self-map $T$ on $S$, common to 
+    \emp{Key idea}: Fixed point theory is for solving equations
     %
-    \begin{itemize}
-        \item write $T x$ instead of $T(x)$ and 
-            \vspace{0.4em}
-        \item call $T$ an \navy{operator} rather than a function
-    \end{itemize}
-
-            \vspace{0.4em}
-    \emp{Key idea}: 
-    %
-    \begin{center}
-        solving equation $x = Tx$ $\iff$ finding fixed points of  $T$
-    \end{center}
+    \begin{enumerate}
+        \item solve $x = Tx$ $\iff$ find fixed points of $T$
+        \item solve $Gx = 0$ $\iff$ find fixed points of $Tx := Gx + x$
+    \end{enumerate}
 
 
     \Eg If $S = \RR^n$ and $T x = Ax + b$, then 
@@ -302,27 +328,17 @@
     %
     \begin{enumerate}
         \item $T$ has a unique fixed point $x^*$ in $S$ and
+            \vspace{0.4em}
         \item $T^k x \to x^*$ as $k \to \infty$ for all $x \in S$  
     \end{enumerate}
 
-    \Eg If $S = \RR^n$ and $Tx = Ax + b$, then 
-    %
-    \begin{equation*}
-        T^k x = A^k x + A^{k-1} b + A^{k-2} b + \cdots + Ab + b
-        \qquad (x \in S, \, k \in \NN)
-    \end{equation*}
-    %
+    \vspace{1em}
+    \vspace{1em}
 
-    If $r(A) < 1$, then $A^k x \to 0$ and 
-    $\sum_{i=0}^k A^i \to (I - A)^{-1}$, so
+    \Eg Let $S = \RR^n$ and $Tx = Ax + b$
 
-    %
-    \begin{equation*}
-        \lim_{k \to \infty} T^k x
-        = \lim_{k \to \infty} 
-        \left[A^k x + \sum_{i=0}^k A^{i-1} b \right]
-        = (I - A)^{-1} b = x^*
-    \end{equation*}
+            \vspace{0.4em}
+    \Ex Prove: $r(A) < 1$ implies $T$ is globally stable on $S$
 
 \end{frame}
 
@@ -412,33 +428,92 @@
 
 \end{frame}
 
+\begin{frame}
+    \frametitle{Contractions}
+    
+    Let 
+    %
+    \begin{itemize}
+        \item $U$ be a nonempty subset of $\RR^n$,
+        \item $\| \cdot \|$ be a norm on $\RR^n$, and
+        \item $T$ be a self-map on $U$
+
+    \end{itemize}
+
+    $T$ is called a \navy{contraction} on $U$ with respect
+    to $\| \cdot \|$ if 
+    %
+    \begin{equation*}
+        \text{$\exists \, \lambda < 1$ such that }
+        \| Tu - Tv \| \leq \lambda \| u - v \| \quad \text{for all} \quad u, v \in U
+    \end{equation*}
+    %
+
+    \Eg $Tx = ax + b$ is a contraction on $\RR$ with respect to $| \cdot |$ 
+    if and only if $|a|<1$
+
+    Indeed, 
+    %
+    \begin{equation*}
+        |Tx - Ty| = |ax + b - ay - b| = |a| |x -y|
+    \end{equation*}
+    
+
+
+\end{frame}
+
+
+
 
 \begin{frame}
-    \frametitle{Successive Approximation}
+    \frametitle{Banach's Contraction Mapping Theorem}
+    
+    {\bf Theorem} If 
+    %
+    \begin{enumerate}
+        \item $U$ is closed in $\RR^n$ and
+        \item $T$ is a contraction of modulus $\lambda$ on $U$
+        with respect to some norm $\| \cdot \|$ on $\RR^n$,
+    \end{enumerate}
+    %
+    then $T$ has a unique fixed point $u^*$ in $U$ and 
+    %
+    \begin{equation*}
+        \| T^n u - u^* \| \leq \lambda^n \| u - u^* \|
+        \quad \text{for all } n \in \NN \text{ and } u \in U
+    \end{equation*}
+    %
+    In particular, $T$ is globally stable on $U$
 
-    A natural algorithm for approximating
-    the fixed point in $S$:
+    \vspace{1em}
+
+    \underline{Proof}: See the DP text
+
+\end{frame}
 
 
+\begin{frame}
+    \frametitle{Successive approximation}
+
+    \vspace{0.3em}
     \begin{algorithm}[H]
       \DontPrintSemicolon
-      fix $x_0$ and $k=0$ \;
-      \While{some stopping condition fails}
+      fix a guess $x_0$ and some error tolerance $\tau$ \;
+      $\epsilon \leftarrow \tau + 1$ \;
+      $x \leftarrow x_0$ \;
+      \While{$\epsilon > \tau$}
       {
-          $x_{k+1} \leftarrow T x_k$ \;
-          $k \leftarrow k+1$ \;
+          $y \leftarrow T x$ \;
+          $\epsilon \leftarrow \| y - x \|$ \;
+          $x \leftarrow y$ \;
       }
-      \Return{$x_k$}
+      \Return{$x$}
     \end{algorithm}
 
-    \underline{If} $T$ is globally stable on $S$, then $(x_k) = (T^k x_0)$ converges
+    \vspace{0.3em}
+    \vspace{0.3em}
+    \underline{If} $T$ is a contraction, say, then the output will be close to
     to $x^*$
-
-    \begin{center}
-        hence output $\approx x^*$
-    \end{center}
-
-    The algorithm just described is called \navy{successive approximation}
 
     
 \end{frame}
@@ -452,7 +527,7 @@
         frame=lines,
         framesep=1em,
         %bgcolor=codebg,
-        fontsize=\tiny
+        fontsize=\scriptsize
         ]{python}{../../solvers.py} 
     \end{listing}
 
@@ -474,28 +549,47 @@
 \begin{frame}
     \frametitle{Newton's Method}
 
-    Let $h$ be a differentiable real-valued function on $(a, b) \subset \RR$
+    \vspace{0.3em}
+    Let $g$ be a smooth self-map on $S := (a, b)$ 
 
-    We seek a \navy{root} of $h$, which is an $x^*$ such that $h(x^*)=0$
+    \vspace{0.3em}
+    We start with guess $x_0$ of the fixed point and update it
+    using
+    $$g_a(x) \approx g(x_0) + g'(x_0)(x - x_0)$$
 
-    We start with guess $x_0$  and then update it
-
-    To do this we use $h(x_1) \approx h(x_0) + h'(x_0)(x_1 - x_0)$
-
-    Setting the RHS $=0$ and solving for $x_1$ gives 
+    \vspace{0.3em}
+    Set $g_a(x_1) = x_1$ and solve for $x_1$ to get
     %
     \begin{equation*}
-        x_1 = x_0 - \frac{h(x_0)}{h'(x_0)}
+        x_1 = \frac{x_0 - g'(x_0) x_0}{1 - g'(x_0)}
     \end{equation*}
 
-    Continuing in the same way, we set
+    Now repeat logic to get $x_2, x_3, \ldots $
+
+\end{frame}
+
+\begin{frame}
+
+    This gives \navy{Newton's method}
+
+    \vspace{0.3em}
+    \vspace{0.3em}
+    We are iterating on the map
     %
     \begin{equation*}
         x_{k+1} = q(x_k) 
         \quad \text{where} \quad
-        q(x) := x - \frac{h(x)}{h'(x)},
+        q(x) := \frac{x - g'(x) x}{1 - g'(x)}
     \end{equation*}
     %
+
+    \vspace{0.3em}
+    Note that we are applying successive approximation to $q$
+
+    \vspace{0.3em}
+    \vspace{0.3em}
+    \vspace{0.3em}
+    Hence we can use the same code
 
 \end{frame}
 
@@ -806,69 +900,6 @@
 
 
 
-
-\begin{frame}
-    \frametitle{Contractions}
-    
-    Let 
-    %
-    \begin{itemize}
-        \item $U$ be a nonempty subset of $\RR^n$,
-        \item $\| \cdot \|$ be a norm on $\RR^n$, and
-        \item $T$ be a self-map on $U$
-
-    \end{itemize}
-
-    $T$ is called a \navy{contraction} on $U$ with respect
-    to $\| \cdot \|$ if 
-    %
-    \begin{equation*}
-        \text{$\exists \, \lambda < 1$ such that }
-        \| Tu - Tv \| \leq \lambda \| u - v \| \quad \text{for all} \quad u, v \in U
-    \end{equation*}
-    %
-
-    \Eg $Tx = ax + b$ is a contraction on $\RR$ with respect to $| \cdot |$ 
-    if and only if $|a|<1$
-
-    Indeed, 
-    %
-    \begin{equation*}
-        |Tx - Ty| = |ax + b - ay - b| = |a| |x -y|
-    \end{equation*}
-    
-
-
-\end{frame}
-
-
-
-
-\begin{frame}
-    \frametitle{Banach's Contraction Mapping Theorem}
-    
-    {\bf Theorem} If 
-    %
-    \begin{enumerate}
-        \item $U$ is closed in $\RR^n$ and
-        \item $T$ is a contraction of modulus $\lambda$ on $U$
-        with respect to some norm $\| \cdot \|$ on $\RR^n$,
-    \end{enumerate}
-    %
-    then $T$ has a unique fixed point $u^*$ in $U$ and 
-    %
-    \begin{equation*}
-        \| T^n u - u^* \| \leq \lambda^n \| u - u^* \|
-        \quad \text{for all } n \in \NN \text{ and } u \in U
-    \end{equation*}
-    %
-    In particular, $T$ is globally stable on $U$
-
-    \vspace{1em}
-
-    \underline{Proof}: See the DP text
-
-\end{frame}
 
 
 
