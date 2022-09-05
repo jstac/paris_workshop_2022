@@ -1,0 +1,1375 @@
+\input{../../slides_preamb.tex}
+
+
+\subtitle{Prelude to Dynamic Programming}
+
+\author{John Stachurski}
+
+\date{September 2022}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\section{Introduction}
+
+
+\begin{frame}
+    \frametitle{Introduction}
+
+    Summary of this lecture:
+
+    \begin{itemize}
+        \item Linear equations
+            \vspace{0.3em}
+        \item Fixed point theory
+            \vspace{0.3em}
+        \item Infinite horizon job search
+    \end{itemize}
+
+            \vspace{0.3em}
+            \vspace{0.3em}
+
+    %\emp{Lecture slides at} \url{https://github.com/jstac/tokyo_2022_coursework}
+
+\end{frame}
+
+
+
+\begin{frame}
+    
+    Operations on real numbers such as $|\cdot|$ and $\vee$ are applied to vectors 
+    \underline{element-by-element}
+
+    \vspace{1em}
+    \Eg
+    %
+    \begin{equation*}
+        a = 
+        \begin{pmatrix}
+            a_1 \\
+            \vdots \\
+            a_n
+        \end{pmatrix}
+        \quad \implies \quad
+        |a| = 
+        \begin{pmatrix}
+            |a_1| \\
+            \vdots \\
+            |a_n|
+        \end{pmatrix}
+    \end{equation*}
+    %
+
+    \vspace{1em}
+
+    %
+    \begin{equation*}
+        a \vee b = 
+        \begin{pmatrix}
+            a_1 \vee b_1 \\
+            \vdots \\
+            a_n \vee b_n 
+        \end{pmatrix}
+        \quad \text{and} \quad
+        a \wedge b = 
+        \begin{pmatrix}
+            a_1 \wedge b_1 \\
+            \vdots \\
+            a_n \wedge b_n 
+        \end{pmatrix}
+    \end{equation*}
+    %
+
+    etc.
+
+\end{frame}
+
+
+
+\section{Fixed Point Theory}
+
+\begin{frame}
+     \frametitle{Linear Equations}   
+
+    Given one-dimensional equation $x = ax + b$, we have 
+    %
+    \begin{equation*}
+        |a| < 1 \quad \implies \quad
+        x^* = \frac{b}{1-a} = \sum_{k \geq 0} a^k b
+    \end{equation*}
+    %
+
+    How can we extend this beyond one dimension?
+
+    \vspace{1em}
+    We define the \navy{spectral radius} of square matrix $A$ as
+    %
+    \begin{equation*}
+        r(A) := \max\setntn{|\lambda|}{\lambda \text{ is an eigenvalue of } A}    
+    \end{equation*}
+    %
+
+    \emp{Key idea}: 
+    %
+    \begin{itemize}
+        \item $r(A)<1$ is a generalization of $|a|<1$
+    \end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Neumann Series Lemma}
+
+    Suppose $b$ is a column vector in $\RR^n$ and $A$ is $n \times n$ 
+
+    \vspace{0.5em}
+    Let $I$ be the $n \times n$ identity matrix
+
+    \vspace{0.5em}
+    {\bf Theorem.} 
+    If $r(A) < 1$, then
+    %
+    \begin{enumerate}
+        \item $I - A$ is nonsingular, 
+        \vspace{0.5em}
+        \item the sum $\sum_{k \geq 0} A^k$ converges, 
+        \vspace{0.5em}
+        \item $(I - A)^{-1} = \sum_{k \geq 0} A^k$, and
+        \vspace{0.5em}
+        \item the vector equation $x = A x + b$ has the unique solution 
+            %
+            \begin{equation*}
+                x^* := (I - A)^{-1} b = \sum_{k \geq 0} A^k b
+            \end{equation*}
+            %
+    \end{enumerate}
+
+    
+\end{frame}
+
+\begin{frame}
+    
+    Intuitive idea: with $S := \sum_{k \geq 0} A^k$, we have
+    %
+    \begin{equation*}
+        I + AS 
+        = I + A (I + A + \cdots)
+        = I + A + A^2 + \cdots 
+        = S
+    \end{equation*}
+    %
+
+    Rearranging $I + AS = S$ gives $S = (I - A)^{-1}$
+            \vspace{0.5em}
+
+    The equation $x = Ax + b$ is equivalent to $(I - A)x = b$
+            \vspace{0.5em}
+
+    Unique solution is $x^* = (I-A)^{-1} b = S b$, as claimed
+            \vspace{0.5em}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Fixed Points}    
+
+    To solve more complex equations we use \emp{fixed point theory}
+
+            \vspace{0.4em}
+    Recall that, if $S$ is any set then
+    %
+    \begin{itemize}
+        \item $T$ is a \navy{self-map} on $S$ if $T$ maps $S$ into itself
+            \vspace{0.4em}
+        \item  $x^* \in S$ is called a
+            \navy{fixed point} of $T$ in $S$ if $T x^* = x^*$  
+    \end{itemize}
+
+            \vspace{0.4em}
+    \Eg Every $x$ in set $S$ is fixed under the \navy{identity map}
+    %
+    \begin{equation*}
+        I \colon x \mapsto x
+    \end{equation*}
+
+    \vspace{1em}
+    \Eg If $S = \NN$ and $Tx = x+1$, then $T$ has no fixed point
+
+
+\end{frame}
+
+
+\begin{frame}
+    
+    \Eg If $S = \RR$ and $Tx = x^2$, then $T$ has fixed points at $0, 1$
+
+    \vspace{1em}
+    \Eg If $S = \RR^n$ and $Tx = Ax + b$,  then
+    %
+    \begin{equation*}
+        r(A) < 1 
+        \; \implies \;
+        x^* := (I-A)^{-1} b 
+        \text{ is the unique f.p.\ of $T$ in $S$}
+    \end{equation*}
+
+    \vspace{1em}
+    \Eg If $S \subset \RR$,  $Tx =x$ $\iff$ $T$ meets the 45 degree line
+
+\end{frame}
+
+
+
+\begin{frame}
+    
+    \begin{figure}
+        \centering
+        \scalebox{0.45}{\includegraphics{local_figs/three_fixed_points.pdf}}
+        \caption{\label{f:three_fixed_points} 
+            Graph and fixed points of $G \colon x \mapsto 2.125/(1 + x^{-4})$ }
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+
+    Given self-map $T$ on $S$, common to 
+    %
+    \begin{itemize}
+        \item write $T x$ instead of $T(x)$ and 
+            \vspace{0.4em}
+        \item call $T$ an \navy{operator} rather than a function
+    \end{itemize}
+
+            \vspace{0.4em}
+    \emp{Key idea}: 
+    %
+    \begin{center}
+        solving equation $x = Tx$ $\iff$ finding fixed points of  $T$
+    \end{center}
+
+
+    \Eg If $S = \RR^n$ and $T x = Ax + b$, then 
+    %
+    \begin{center}
+        $x^*$ solves equation  $x = Ax + b$
+        $\iff$ 
+        $x^*$ is a fixed point of $T$ 
+    \end{center}
+
+
+    (But fixed point theory is mainly for nonlinear equations)
+
+    
+\end{frame}
+
+
+\begin{frame}
+    
+    Point on notation:
+    %
+    \begin{itemize}
+        \item $T^2 = T \circ T$
+            \vspace{0.4em}
+        \item $T^3 = T \circ T \circ T$
+            \vspace{0.4em}
+        \item etc.
+    \end{itemize}
+            \vspace{0.4em}
+            \vspace{0.4em}
+            \vspace{0.4em}
+
+
+    \Eg $Tx = Ax + b$ implies $T^2x = A(Ax + b) + b$
+
+\end{frame}
+
+
+
+\begin{frame}
+    
+    Self-map $T$ is called \navy{globally stable} on $S$
+    if 
+    %
+    \begin{enumerate}
+        \item $T$ has a unique fixed point $x^*$ in $S$ and
+        \item $T^k x \to x^*$ as $k \to \infty$ for all $x \in S$  
+    \end{enumerate}
+
+    \Eg If $S = \RR^n$ and $Tx = Ax + b$, then 
+    %
+    \begin{equation*}
+        T^k x = A^k x + A^{k-1} b + A^{k-2} b + \cdots + Ab + b
+        \qquad (x \in S, \, k \in \NN)
+    \end{equation*}
+    %
+
+    If $r(A) < 1$, then $A^k x \to 0$ and 
+    $\sum_{i=0}^k A^i \to (I - A)^{-1}$, so
+
+    %
+    \begin{equation*}
+        \lim_{k \to \infty} T^k x
+        = \lim_{k \to \infty} 
+        \left[A^k x + \sum_{i=0}^k A^{i-1} b \right]
+        = (I - A)^{-1} b = x^*
+    \end{equation*}
+
+\end{frame}
+
+
+
+\begin{frame}
+    
+    \Eg Consider Solow--Swan growth dynamics 
+    %
+    \begin{equation*}
+        \label{eq:solow}
+        k_{t+1} = g(k_t) := s A k_t^\alpha + (1 - \delta) k_t,
+        \qquad t = 0, 1, \ldots,
+    \end{equation*}
+    %
+    where 
+    %
+    \begin{itemize}
+        \item $k_t$ is capital stock per worker,
+        \item $A, \alpha >0$ are production parameters, $\alpha < 1$
+        \item $s > 0$ is a savings rate, and
+        \item $\delta \in (0,1)$ is a rate of depreciation  
+    \end{itemize}
+
+    Iterating with $g$ from $k_0$ generates a time path for capital stock
+
+    The map $g$ is globally stable on $(0, \infty)$
+
+\end{frame}
+
+\begin{frame}
+    
+    \begin{figure}
+       \centering
+       \scalebox{0.2}{\includegraphics{local_figs/solow_fp.pdf}}
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Note from last slide
+
+    \begin{itemize}
+        \item If $g$ is flat near $k^*$, then $g(k) \approx k^*$ for $k$ near $k^*$
+    \vspace{0.3em}
+        \item A flat function near the fixed point $\implies$ fast convergence
+    \end{itemize}
+
+    \vspace{0.3em}
+    \vspace{0.3em}
+    Conversely
+
+    \begin{itemize}
+        \item If $g$ is close to the 45 degree line near $k^*$, then $g(k)
+            \approx k$ 
+    \vspace{0.3em}
+        \item Close to 45 degree line means high persistence, slow convergence
+    \end{itemize}
+    %
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+
+    Given a self-map $T$ on $S$, we typically ask
+    %
+    \begin{itemize}
+        \item Does $T$ have at least one fixed point on $S$ (existence)?
+    \vspace{0.3em}
+        \item Does $T$ have at most one fixed point on $S$ (uniqueness)?
+    \vspace{0.3em}
+        \item How can we compute fixed points of $T$?
+    \end{itemize}
+
+    \vspace{0.3em}
+    For the last question, we seek an algorithm
+
+    \vspace{0.3em}
+    \vspace{0.3em}
+    Then we investigate its properties
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Successive Approximation}
+
+    A natural algorithm for approximating
+    the fixed point in $S$:
+
+
+    \begin{algorithm}[H]
+      \DontPrintSemicolon
+      fix $x_0$ and $k=0$ \;
+      \While{some stopping condition fails}
+      {
+          $x_{k+1} \leftarrow T x_k$ \;
+          $k \leftarrow k+1$ \;
+      }
+      \Return{$x_k$}
+    \end{algorithm}
+
+    \underline{If} $T$ is globally stable on $S$, then $(x_k) = (T^k x_0)$ converges
+    to $x^*$
+
+    \begin{center}
+        hence output $\approx x^*$
+    \end{center}
+
+    The algorithm just described is called \navy{successive approximation}
+
+    
+\end{frame}
+
+
+\begin{frame}
+    
+    \begin{listing}[H]
+    \inputminted[
+        firstline=1,
+        frame=lines,
+        framesep=1em,
+        %bgcolor=codebg,
+        fontsize=\tiny
+        ]{python}{../../solvers.py} 
+    \end{listing}
+
+\end{frame}
+
+\begin{frame}
+    
+
+    \begin{figure}
+        \centering
+        \scalebox{0.52}{\includegraphics{local_figs/linear_iter_fig_1.pdf}}
+        \caption{\label{f:linear_iter_fig_1} 
+            Successive approximation from different initial conditions}
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Newton's Method}
+
+    Let $h$ be a differentiable real-valued function on $(a, b) \subset \RR$
+
+    We seek a \navy{root} of $h$, which is an $x^*$ such that $h(x^*)=0$
+
+    We start with guess $x_0$  and then update it
+
+    To do this we use $h(x_1) \approx h(x_0) + h'(x_0)(x_1 - x_0)$
+
+    Setting the RHS $=0$ and solving for $x_1$ gives 
+    %
+    \begin{equation*}
+        x_1 = x_0 - \frac{h(x_0)}{h'(x_0)}
+    \end{equation*}
+
+    Continuing in the same way, we set
+    %
+    \begin{equation*}
+        x_{k+1} = q(x_k) 
+        \quad \text{where} \quad
+        q(x) := x - \frac{h(x)}{h'(x)},
+    \end{equation*}
+    %
+
+\end{frame}
+
+
+\begin{frame}
+    
+    \begin{figure}
+       \centering
+       \scalebox{0.5}{\includegraphics{local_figs/newton_solow_45.pdf}}
+       \caption{\label{f:newton_solow_45} Successive approximation vs Newton's method}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}
+    
+    Comments:
+    %
+    \begin{itemize}
+        \item The map $q$ is flat close to the fixed point $k^*$
+            \vspace{0.5em}
+        \item Hence Newton's method converges quickly \underline{near} $k^*$
+            \vspace{0.5em}
+        \item But Newton's method is not globally convergent
+            \vspace{0.5em}
+        \item Successive approximation is slower but more robust
+    \end{itemize}
+
+
+    \emp{Key ideas}
+    %
+    \begin{itemize}
+        \item There is almost always a trade-off between robustness and speed
+            \vspace{0.5em}
+        \item Speed requires assumptions, and assumptions can fail
+    \end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}
+    
+    \emp{Newton's method} extends naturally to \emp{multiple dimensions}
+
+            \vspace{0.5em}
+    When $h$ is a map from $S \subset \RR^n$ to itself, we use
+
+    %
+    \begin{equation*}
+        x_{k+1} = x_k - [J(x_k)]^{-1} h(x_k)
+    \end{equation*}
+    %
+
+    Here $J_h(x_k) := $ the Jacobian of $h$ evaluated at $x_k$
+
+    \vspace{1em}
+
+    Comments
+    %
+    \begin{itemize}
+        \item Typically faster but less robust
+            \vspace{0.5em}
+        \item Matrix operations can be parallelized
+            \vspace{0.5em}
+        \item Automatic differentiation can be helpful
+    \end{itemize}
+
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Job Search}
+
+    A model of job search created by \emp{John J. McCall}
+    \vspace{0.5em}
+
+    We model the \underline{decision problem of an unemployed worker}
+
+    \vspace{0.5em}
+    Job search depends on
+    %
+    \begin{itemize}
+        \item current and likely future wage offers
+    \vspace{0.5em}
+        \item impatience, and
+    \vspace{0.5em}
+        \item the availability of unemployment compensation
+    \end{itemize}
+
+    \vspace{0.5em}
+    We begin with a very simple version of the McCall model 
+
+    \vspace{0.5em}
+    (Later we consider extensions)
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Set Up}
+    
+    An agent begins working life at time $t=0$ without employment  
+
+            \vspace{0.5em}
+    Receives a new job offer paying wage $w_t$ at each date $t$  
+            \vspace{0.5em}
+
+    She has two choices:
+    %
+    \begin{enumerate}
+        \item \emp{accept} the offer and work \underline{permanently} at $w_t$ or
+            \vspace{0.5em}
+        \item \emp{reject} the offer, receive unemployment compensation $c$, and reconsider next period
+    \end{enumerate}
+
+            \vspace{0.5em}
+    Assume $\{w_t\}$ is $\iidsim \phi$, where
+    %
+    \begin{itemize}
+        \item $\Wsf \subset \RR_+$ is a finite set of wage outcomes and
+            \vspace{0.5em}
+        \item $\phi \in \dD(\Wsf)$
+    \end{itemize}
+    %
+
+\end{frame}
+
+
+
+\begin{frame}
+
+    The agent cares about the future but is \emp{impatient}
+
+            \vspace{0.5em}
+    Impatience is parameterized by a \navy{time discount factor} $\beta \in (0, 1)$
+
+            \vspace{0.5em}
+    \begin{itemize}
+        \item Present value of a next-period payoff of $y$ dollars is $\beta y$
+    \end{itemize}
+
+            \vspace{0.5em}
+            \vspace{0.5em}
+    Trade off:
+    %
+    \begin{itemize}
+        \item $\beta < 1$ indicating some impatience
+            \vspace{0.5em}
+        \item hence the agent will be
+            tempted to accept reasonable offers, rather than always waiting
+            for a better one
+            \vspace{0.5em}
+        \item The key question is how long to wait
+    \end{itemize}
+   
+\end{frame}
+
+
+\begin{frame}
+    
+    The worker who aims to maximize 
+    %
+    \begin{equation}
+        \EE \sum_{t=0}^{\infty} \beta^t Y_t,
+        \quad 
+        \text{$Y_t \in \{c, W_t\}$ is earnings at time $t$}
+    \end{equation}
+
+        \vspace{0.4em}
+    \begin{itemize}
+        \item $\{ W_t \} \iidsim \phi$ for $\phi \in \dD(\Wsf)$ 
+        \vspace{0.4em}
+        \item $\Wsf \subset \RR_+$ with $|\Wsf| < \infty$
+        \vspace{0.4em}
+        \item $c$ and $\beta$ are positive and $\beta < 1$
+        \vspace{0.4em}
+        \item jobs are \underline{permanent} 
+    \end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}
+    
+    What is max EPV of each option when lifetime is infinite?  
+
+    What if we \emp{accept} $w \in \Wsf$ now?
+    %
+    \begin{equation*}
+        \text{EPV }
+        = \text{stopping value }
+        = w + \beta w + \beta^2 w + \cdots 
+        = \frac{w}{1 - \beta}
+    \end{equation*}
+    %    
+
+    What if we \emp{reject}?
+    %
+    \begin{align*}
+        \text{EPV }
+        & = \text{continuation value }
+        \\
+        & = \text{EPV of \underline{optimal} choice in each subsequent period}
+    \end{align*}
+
+    But what are optimal choices?!
+
+    Calculating optimal choice requires knowing optimal choice!
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{The Value Function}
+
+    Let  $v^*(w) :=$ max lifetime EPV given wage offer $w$
+    \vspace{0.4em}
+
+    We call $v^*$ the \navy{value function}\index{Value function}
+
+    \vspace{0.4em}
+    \emp{Suppose} that we know $v^*$
+
+    \vspace{0.4em}
+    Then the (maximum) \navy{continuation value} is 
+    %
+    \begin{align*}
+        h^* 
+        & := c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w') 
+        \\
+        & = \text{ max EPV conditional on decision to continue}
+    \end{align*}
+
+    The optimal choice is then
+    %
+    \begin{equation*}
+         \1
+        \left\{
+            \text{stopping value} \geq \text{continuation value}
+        \right\}
+         = \1
+        \left\{
+            \frac{w}{1 - \beta}, \; h^*
+        \right\}
+    \end{equation*}
+
+
+\end{frame}
+
+
+\begin{frame}
+
+    But how can we calculate $v^*$?
+
+    \vspace{0.4em}
+    \emp{Key idea}: We can use the Bellman equation to solve for $v^*$
+
+    \vspace{0.4em}
+    {\bf Theorem.} The value function $v^*$ satisfies the \navy{Bellman
+    equation}
+    %
+    \begin{equation*}
+        v^*(w) = 
+        \max \left\{
+            \frac{w}{1-\beta}
+            ,\,
+            c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w')
+            \right\}
+            \qquad (w \in \Wsf)
+    \end{equation*}
+    %
+
+    Intuition:
+    %
+    \begin{itemize}
+        \item If accept, get $w/(1-\beta)$
+        \item If reject and then choose optimally, get max continuation value
+        \item Max value today is max of these alternatives
+    \end{itemize}
+
+
+\end{frame}
+
+
+\begin{frame}
+
+    So how can we use the Bellman equation
+    %
+    \begin{equation*}
+        v^*(w) = 
+        \max \left\{
+            \frac{w}{1-\beta}
+            ,\,
+            c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w')
+            \right\}
+            \qquad (w \in \Wsf)
+    \end{equation*}
+    %
+    to solve for $v^*$?
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Contractions}
+    
+    Let 
+    %
+    \begin{itemize}
+        \item $U$ be a nonempty subset of $\RR^n$,
+        \item $\| \cdot \|$ be a norm on $\RR^n$, and
+        \item $T$ be a self-map on $U$
+
+    \end{itemize}
+
+    $T$ is called a \navy{contraction} on $U$ with respect
+    to $\| \cdot \|$ if 
+    %
+    \begin{equation*}
+        \text{$\exists \, \lambda < 1$ such that }
+        \| Tu - Tv \| \leq \lambda \| u - v \| \quad \text{for all} \quad u, v \in U
+    \end{equation*}
+    %
+
+    \Eg $Tx = ax + b$ is a contraction on $\RR$ with respect to $| \cdot |$ 
+    if and only if $|a|<1$
+
+    Indeed, 
+    %
+    \begin{equation*}
+        |Tx - Ty| = |ax + b - ay - b| = |a| |x -y|
+    \end{equation*}
+    
+
+
+\end{frame}
+
+
+
+
+\begin{frame}
+    \frametitle{Banach's Contraction Mapping Theorem}
+    
+    {\bf Theorem} If 
+    %
+    \begin{enumerate}
+        \item $U$ is closed in $\RR^n$ and
+        \item $T$ is a contraction of modulus $\lambda$ on $U$
+        with respect to some norm $\| \cdot \|$ on $\RR^n$,
+    \end{enumerate}
+    %
+    then $T$ has a unique fixed point $u^*$ in $U$ and 
+    %
+    \begin{equation*}
+        \| T^n u - u^* \| \leq \lambda^n \| u - u^* \|
+        \quad \text{for all } n \in \NN \text{ and } u \in U
+    \end{equation*}
+    %
+    In particular, $T$ is globally stable on $U$
+
+    \vspace{1em}
+
+    \underline{Proof}: See the DP text
+
+\end{frame}
+
+
+
+\begin{frame}
+
+    Let's now return to the job search problem 
+
+    Recall that that the value function $v^*$ solves the Bellman equation
+
+    \vspace{1em}
+
+    That is,
+    %
+    \begin{equation*}
+        v^*(w) = 
+        \max \left\{
+            \frac{w}{1-\beta}
+            ,\,
+            c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w')
+            \right\}
+            \qquad (w \in \Wsf)
+    \end{equation*}
+    %
+
+    \vspace{1em}
+
+    The infinite-horizon \navy{continuation value} is defined as
+    %
+    \begin{equation*}
+        h^* := c + \beta \sum_{w'} v^*(w') \phi(w') 
+    \end{equation*}
+    %
+
+    \emp{Key question}: how to solve for $v^*$?  
+
+\end{frame}
+
+
+\begin{frame}
+
+    We introduce the \navy{Bellman operator}, defined at
+    $v \in \RR^\Wsf$ by
+    %
+    \begin{equation*}
+        (Tv)(w) 
+        = 
+        \max 
+        \left\{
+            \frac{w}{1-\beta}
+            ,\,
+            c + \beta \sum_{w' \in \Wsf} v(w') \phi(w')
+        \right\}
+        \qquad (w \in \Wsf)
+    \end{equation*}
+    %
+
+    By construction, $Tv=v$ $\iff$ $v$ solves the Bellman equation 
+
+        \vspace{0.5em}
+    Let $\vV := \RR^\Wsf_+$ 
+
+        \vspace{0.5em}
+    {\bf Proposition.} $T$ is a contraction $\vV$
+        with respect to $\| \cdot \|_\infty$
+
+        \vspace{0.5em}
+    In the proof, we use the elementary bound
+    %
+    \begin{equation*}
+        |\alpha \vee x - \alpha \vee y| \leq |x - y|
+        \qquad (\alpha, x, y \in \RR)
+    \end{equation*}
+    %
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Fixing $f, g$ in $\vV$ fix any $w \in \Wsf$, we have 
+    %
+    \begin{align*}
+        |(Tf)(w) - (Tg)(w)|
+        & \leq \left|
+        \beta \sum_{w'} f(w') \phi(w')
+                -
+                \beta \sum_{w'} g(w') \phi(w')  
+            \right|
+        \\
+        & = \beta 
+            \left|
+            \sum_{w'} [f(w') - g(w')] \phi(w') 
+            \right|
+    \end{align*}
+    %
+
+    Applying the triangle inequality,
+    %
+    \begin{equation*}
+        |(Tf)(w) - (Tg)(w)|
+        \leq \beta \sum_{w'} |f(w') - g(w')| \phi(w') 
+        \leq \beta \| f - g \|_\infty 
+    \end{equation*}
+    %
+
+    %
+    \begin{equation*}
+        \fore
+        \|Tf - Tg \|_\infty \leq \beta \| f - g \|_\infty 
+    \end{equation*}
+    %
+
+\end{frame}
+
+\begin{frame}
+    
+    Recall: The optimal decision at any given time, facing current wage draw $w \in
+    \Wsf$, is 
+    %
+    \begin{equation*}
+        \1 \left\{ \frac{w}{1-\beta} \geq h^* \right\}
+    \end{equation*}
+
+    \vspace{1em}
+
+    Let's try to write this in the language of dynamic programming
+    
+    \vspace{1em}
+
+    Dynamic programming centers around the problem of finding optimal
+    \emp{policies}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Optimal Policies}
+
+    In general, for a dynamic program, choices consist of a sequence $(A_t)_{t
+    \geq 0}$ 
+    %
+    \begin{itemize}
+        \item specifies how the agent acts at each $t$ 
+    \end{itemize}
+
+
+    Since agents are not clairvoyant, so we assume that $A_t$ cannot
+    depend on future events
+
+    In other words, for some function $\sigma_t$,
+    %
+    \begin{equation*}
+        A_t = \sigma_t(
+                    X_t, A_{t-1}, X_{t-1}, A_{t-2}, X_{t-2}, \ldots
+                    A_0, X_0)
+    \end{equation*}
+    %
+
+    In dynamic programming, $\sigma_t$ is called a \navy{policy function}
+
+\end{frame}
+
+
+\begin{frame}
+
+    \emp{Key idea} Design the state such that $X_t$ is
+    %
+    \begin{itemize}
+        \item \underline{sufficient to determine the optimal current action}
+        \item but not so large as to be unmanagable
+    \end{itemize}
+
+    \begin{itemize}
+        \item Finding the state is an art!
+    \end{itemize}
+    
+    \Eg Recall retailer who chooses stock orders and prices in each period
+
+    What to include in the current state?
+
+    \begin{itemize}
+        \item level of current inventories 
+        \item interest rates and inflation?
+        \item the rate at which inventories have changed?
+        \item competitors prices?
+    \end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}
+    
+    So suppose state $X_t$ determines the current action $A_t$
+
+    Then we can write $A_t = \sigma(X_t)$ for some function $\sigma$
+
+    Note that we dropped the time subscript on $\sigma$
+
+    No loss of generality: can include time in the current state 
+    %
+    \begin{itemize}
+        \item i.e., expand $X_t$ to $\hat X_t = (t, X_t)$
+    \end{itemize}
+
+    Depends on the problem at hand
+    %
+    \begin{itemize}
+        \item For the job search model with finite horizon, the date matters
+        \item For the infinite horizon version of the problem, however, the
+            agent always looks forward toward an infinite horizon
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    For job search model, 
+    %
+    \begin{itemize}
+        \item state $=$ current wage offer and 
+        \item possible actions are accept (1) or reject (0)
+    \end{itemize}
+
+    A policy is a map $\sigma$ from $\Wsf$ to $\{0,1\}$
+
+    Let $\Sigma$ be the set of all such maps
+
+    For each $v \in \vV$, let us define a \navy{$v$-greedy
+    policy} to be a $\sigma \in \Sigma$ satisfying
+    %
+    \begin{equation*}
+        \sigma(w) 
+        = \1
+        \left\{
+            \frac{w}{1-\beta}
+            \geq
+            c + \beta \, \sum_{w' \in \Wsf} v(w') \phi(w')
+        \right\}
+        \quad \text{for all } w \in \Wsf
+    \end{equation*}
+    %
+
+    Accepts iff $w/(1-\beta) \geq$ continuation value computed
+    using $v$ 
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Optimal choice:
+    %
+    \begin{itemize}
+        \item agent should adopt a $v^*$-greedy policy
+            \vspace{0.5em}
+        \item Sometimes called \navy{Bellman's principle of optimality}
+    \end{itemize}
+
+
+    We can also express a $v^*$-greedy policy via
+    %
+    \begin{equation}
+        \label{eq:opjs3d}
+        \sigma^*(w) 
+        = \1
+        \left\{
+            w \geq w^*
+        \right\}
+        \quad \text{where } \;
+        w^* := (1 - \beta) h^* 
+    \end{equation}
+    %
+
+    The term $w^*$ in \eqref{eq:opjs3d} is called the \navy{reservation
+    wage}
+
+    \begin{itemize}
+        \item Same ideas as before, different language
+            \vspace{0.5em}
+        \item We prove optimality more carefully later
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Computation}
+
+    Since $T$ is globally stable on $\vV$, we can compute an approximate
+    optimal policy by 
+    %
+    \begin{enumerate}
+        \item applying successive approximation on $T$ to compute $v^*$
+        \item calculate a $v^*$-greedy policy
+    \end{enumerate}
+
+    In dynamic programming, this approach is called \navy{value function iteration}
+
+\end{frame}
+
+
+
+\begin{frame}
+
+    {\small 
+        \begin{algorithm}[H]
+        \DontPrintSemicolon
+        input $v_0 \in \vV$, an initial guess of $v^*$ \;
+        input $\tau$, a tolerance level for error \;
+        $\epsilon \leftarrow \tau + 1$ \;
+        $k \leftarrow 0$ \;
+        \While{$\epsilon > \tau $}
+        {
+            \For{$w \in \Wsf$}
+            {
+                $v_{k+1}(w) \leftarrow (Tv_k) (w)$ \;
+            }
+            $\epsilon \leftarrow \| v_k - v_{k+1} \|_\infty$ \;
+            $k \leftarrow k + 1$ \;
+        }
+        Compute a $v_k$-greedy policy $\sigma$ \;
+        \Return{$\sigma$}
+    \end{algorithm}
+    }
+
+
+\end{frame}
+
+
+\begin{frame}
+    
+    \begin{figure}
+        \centering
+        \scalebox{0.42}{\includegraphics{local_figs/iid_job_search_1.pdf}}
+        \caption{\label{f:iid_job_search_1} A sequence of iterates of the Bellman operator}
+    \end{figure}
+    %
+
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{figure}
+        \centering
+        \scalebox{0.42}{\includegraphics{local_figs/iid_job_search_3.pdf}}
+        \caption{\label{f:iid_job_search_3} The approximate value function for job
+        search}
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Computing the Continuation Value Directly}
+
+    We used a standard dynamic programming approach to solve this problem
+
+    Sometimes we can find more efficient ways to solve particular problems
+
+    For the infinite horizon job search problem, a more efficient way exists
+
+    The idea is to compute the continuation value directly
+
+    This shifts the problem from $n$-dimensional to one-dimensional
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Method: Recall that 
+    %
+    \begin{equation*}
+        v^*(w) 
+        = 
+        \max 
+        \left\{
+            \frac{w}{1-\beta}
+            ,\,
+            c + \beta \sum_{w'} v^*(w') \phi(w')
+        \right\}
+        \qquad (w \in \Wsf)
+    \end{equation*}
+    %
+
+    Using the definition of $h^*$, we can write 
+    %
+    \begin{equation*}
+        v^*(w') = \max \left\{ w'/(1-\beta) ,\, h^* \right\}
+        \qquad (w' \in \Wsf)
+    \end{equation*}
+
+    Take expectations, multiply by $\beta$ and add $c$ to obtain
+    %
+    \begin{equation*}
+        h^*
+        = 
+        c + \beta 
+        \sum_{w'} \max 
+        \left\{
+            \frac{w'}{1-\beta}
+            ,\,
+            h^*
+        \right\} \phi(w')
+    \end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+
+    How to find $h^*$ from the equation
+    %
+    \begin{equation}\label{eq:cv}
+        h^*
+        = 
+        c + \beta 
+        \sum_{w'} \max 
+        \left\{
+            \frac{w'}{1-\beta}
+            ,\,
+            h^*
+        \right\} \phi(w')
+    \end{equation}
+
+    
+    We introduce the map $g \colon \RR_+ \to \RR_+$ defined by
+    %
+    \begin{equation*}
+        g(h)
+        = 
+        c + \beta
+        \sum_{w'} \max 
+        \left\{
+            \frac{w'}{1-\beta}
+            ,\,
+            h
+        \right\} \phi(w')
+    \end{equation*}
+    %
+
+    By construction, $h^*$ solves \eqref{eq:cv} if and only if $h^*$ is a fixed
+    point of $g$  
+
+    \vspace{1em}
+    \Ex Show that $g$ is a contraction map on $\RR_+$ 
+
+\end{frame}
+
+\begin{frame}
+
+    \begin{figure}
+        \centering
+        \scalebox{0.4}{\includegraphics{local_figs/iid_job_search_g.pdf}}
+        \caption{\label{f:iid_job_search_4} Computing the continuation value as the fixed point of $g$}
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    New algorithm:
+
+    %
+    \begin{enumerate}
+        \item Compute $h^*$ via successive approximation on $g$
+            \vspace{1em}
+            \begin{itemize}
+                \item Iteration in $\RR$, not $\RR^n$
+            \end{itemize}
+            \vspace{1em}
+        \item Optimal policy is 
+            %
+            \begin{equation*}
+                \sigma^*(w)
+                = \1
+                \left\{
+                    \frac{w}{1-\beta}
+                    \geq
+                    h^*
+                \right\}
+            \end{equation*}
+    \end{enumerate}
+
+\end{frame}
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+

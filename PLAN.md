@@ -12,9 +12,13 @@ Part 1  (Python + NumPy, SciPy)
 Part 2  (Applications)
 
 - Equilibrium
-- European option w/o JAX
-- Successive approximation and Newton's method applied to Solow
-- McCall Job search
+- European option with Numba
+- Fixed points, successive approximation and Newton's method 
+    - slides
+    - application to Solow
+- McCall job search 
+    - slides
+    - code
 
 Part 3 (Dynamic Programming)
 

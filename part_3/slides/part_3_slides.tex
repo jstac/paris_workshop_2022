@@ -1,0 +1,163 @@
+\input{../../slides_preamb.tex}
+
+
+\subtitle{Dynamic Programming}
+
+\author{John Stachurski}
+
+\date{September 2022}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\section{Introduction}
+
+
+\begin{frame}
+    \frametitle{Introduction}
+
+    Summary of this lecture:
+
+    \begin{itemize}
+        \item Foobar
+            \vspace{0.3em}
+        \item Foobar
+    \end{itemize}
+
+            \vspace{0.3em}
+            \vspace{0.3em}
+
+    %\emp{Lecture slides at} \url{https://github.com/jstac/tokyo_2022_coursework}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+    \frametitle{Introduction to Dynamic Programming}
+
+    Dynamic program
+
+    \begin{algorithm}[H]
+      \DontPrintSemicolon
+      an initial state $X_0$ is given \;
+      $t \leftarrow 0$ \; %  \tcp{foo}
+      \While{$t < T$}
+      {
+          observe current state $X_t$   \;
+          choose action $A_t$ \;
+          receive reward $R_t$ based on $(X_t, A_t)$ \;
+          state updates to $X_{t+1}$ \;
+          $t \leftarrow t + 1$ \;
+      }
+    \end{algorithm}
+
+\end{frame}
+
+\begin{frame}
+    
+    \begin{figure}
+        \centering
+        \vspace{1em}
+        \scalebox{0.4}{\input{local_figs/state_action_reward.pdf_t}}
+        \vspace{1em}
+        \caption{\label{f:state_action_reward} A dynamic program}
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Comments:
+    %
+    \begin{itemize}
+        \item Objective: maximize \emp{lifetime rewards}
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \begin{itemize}
+            \item Some aggregation of $R_0, R_1, \ldots$
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \item \Eg $\EE [ R_0 + \beta R_1 + \beta^2 R_2 + \cdots]$ for
+                some $\beta \in (0, 1)$
+        \end{itemize}
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item If $T < \infty$ then the problem is called a \navy{finite horizon} problem  
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item Otherwise it is called an \navy{infinite horizon} problem
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item The update rule can also depend on random elements:
+            %
+            \begin{equation*}
+                X_{t+1} = F(X_t, A_t, \xi_{t+1})
+            \end{equation*}
+            %
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+
+    \Eg A retailer sets prices and manages inventories to maximize profits
+
+    \begin{itemize}
+        \item $X_t$ measures 
+            \begin{itemize}
+                \item current business environment
+            \vspace{0.3em}
+                \item the size of the inventories
+            \vspace{0.3em}
+                \item prices set by competitors, etc. 
+            \end{itemize}
+            \vspace{0.3em}
+        \item $A_t$ specifies current prices and orders of new stock
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item $R_t$ is current profit $\pi_t$
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item Lifetime reward is 
+            %
+            \begin{equation*}
+                \EE \left[ \pi_0 + \frac{1}{1+r} \pi_1 
+                    + \left(\frac{1}{1+r}\right)^2 \pi_2
+                    + \cdots \right]
+                    = \text{EPV}
+            \end{equation*}
+    \end{itemize}
+
+
+\end{frame}
+
+
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
