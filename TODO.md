@@ -14,6 +14,10 @@ Possibly add to optimal savings problem:
 - stochastic interest rates 
 - labor choice 
 
+Test Anderson Acceleration with VFI
+
+Test asynchronous VFI
+
 Write up R&D with IID costs as an example of dimensionality reduction.
 
 Prepare Arellano JAX version.
