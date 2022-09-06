@@ -44,8 +44,7 @@
 
 \begin{frame}
     
-    Operations on real numbers such as $|\cdot|$ and $\vee$ are applied to vectors 
-    \underline{element-by-element}
+    Convention: Real operations extend to vectors \underline{element-by-element}
 
     \vspace{1em}
     \Eg
@@ -77,13 +76,6 @@
             \vdots \\
             a_n \vee b_n 
         \end{pmatrix}
-        \quad \text{and} \quad
-        a \wedge b = 
-        \begin{pmatrix}
-            a_1 \wedge b_1 \\
-            \vdots \\
-            a_n \wedge b_n 
-        \end{pmatrix}
     \end{equation*}
     %
 
@@ -98,16 +90,15 @@
 \begin{frame}
      \frametitle{Linear Equations}   
 
-    Given one-dimensional equation $x = ax + b$, we have 
+    For scalar equation $x = ax + b$, 
     %
-    \begin{equation*}
+    \begin{align*}
         |a| < 1 \quad \implies \quad
-        x^* = \frac{b}{1-a} = \sum_{k \geq 0} a^k b
-    \end{equation*}
+        x^* & = \frac{b}{1-a} \\
+            & = \sum_{i \geq 0} a^i b
+    \end{align*}
     %
 
-    \vspace{1em}
-    \vspace{1em}
     How can we extend this beyond one dimension?
 
     \vspace{1em}
@@ -122,16 +113,16 @@
 
 \begin{frame}
 
-    Recall that $\lambda \in \CC$ is an eigenvalue of $n \times n$ matrix $A$ if
+    Recall that $\lambda \in \CC$ is an \navy{eigenvalue} of $n \times n$ matrix $A$ if
     %
     \begin{equation*}
         A e = \lambda e
+        \quad \text{for some nonzero $e \in \CC^n$}
     \end{equation*}
     %
-    for some nonzero $e \in \CC^n$.
 
     \vspace{1em}
-    We define the \navy{spectral radius} of square matrix $A$ as
+    We define the \navy{spectral radius} of $A$ as
     %
     \begin{equation*}
         r(A) := \max\setntn{|\lambda|}{\lambda \text{ is an eigenvalue of } A}    
@@ -280,9 +271,10 @@
     %
     \begin{enumerate}
         \item solve $x = Tx$ $\iff$ find fixed points of $T$
-        \item solve $Gx = 0$ $\iff$ find fixed points of $Tx := Gx + x$
+        \item solve $Gx = 0$ $\iff$ find fixed points of $Tx = Gx + x$
     \end{enumerate}
 
+    \vspace{1em}
 
     \Eg If $S = \RR^n$ and $T x = Ax + b$, then 
     %
@@ -293,6 +285,7 @@
     \end{center}
 
 
+    \vspace{1em}
     (But fixed point theory is mainly for nonlinear equations)
 
     
@@ -782,7 +775,8 @@
     
     What is max EPV of each option when lifetime is infinite?  
 
-    What if we \emp{accept} $w \in \Wsf$ now?
+        \vspace{0.4em}
+    If we \emp{accept} $w \in \Wsf$,
     %
     \begin{equation*}
         \text{EPV }
@@ -792,16 +786,19 @@
     \end{equation*}
     %    
 
-    What if we \emp{reject}?
+        \vspace{0.4em}
+    If we \emp{reject},
     %
     \begin{align*}
         \text{EPV }
         & = \text{continuation value }
         \\
-        & = \text{EPV of \underline{optimal} choice in each subsequent period}
+        & = \text{$c$ + EPV of \underline{optimal} choice in subsequent periods}
     \end{align*}
 
+        \vspace{0.4em}
     But what are optimal choices?!
+        \vspace{0.4em}
 
     Calculating optimal choice requires knowing optimal choice!
 
@@ -814,19 +811,14 @@
     \vspace{0.4em}
 
     We call $v^*$ the \navy{value function}\index{Value function}
-
     \vspace{0.4em}
-    \emp{Suppose} that we know $v^*$
 
-    \vspace{0.4em}
-    Then the (maximum) \navy{continuation value} is 
+    \emp{If} we know $v^*$ then we can compute the \navy{continuation value} 
     %
-    \begin{align*}
+    \begin{equation*}
         h^* 
-        & := c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w') 
-        \\
-        & = \text{ max EPV conditional on decision to continue}
-    \end{align*}
+        := c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w') 
+    \end{equation*}
 
     The optimal choice is then
     %
@@ -850,7 +842,7 @@
     But how can we calculate $v^*$?
 
     \vspace{0.4em}
-    \emp{Key idea}: We can use the Bellman equation to solve for $v^*$
+    \emp{Key idea}: Use the Bellman equation 
 
     \vspace{0.4em}
     {\bf Theorem.} The value function $v^*$ satisfies the \navy{Bellman
@@ -867,13 +859,16 @@
     \end{equation*}
     %
 
-    Intuition:
+    \vspace{0.4em}
+    \vspace{0.4em}
+    \vspace{0.4em}
+    Intuition: Max value today is max over the alternatives
     %
-    \begin{itemize}
-        \item If accept, get $w/(1-\beta)$
-        \item If reject and then choose optimally, get max continuation value
-        \item Max value today is max of these alternatives
-    \end{itemize}
+    \begin{enumerate}
+        \item accept and get $w/(1-\beta)$
+        \vspace{0.4em}
+        \item reject and get max continuation value
+    \end{enumerate}
 
 
 \end{frame}
@@ -903,39 +898,39 @@
 
 
 
-\begin{frame}
+%\begin{frame}
 
-    Let's now return to the job search problem 
+    %Let's now return to the job search problem 
 
-    Recall that that the value function $v^*$ solves the Bellman equation
+    %Recall that that the value function $v^*$ solves the Bellman equation
 
-    \vspace{1em}
+    %\vspace{1em}
 
-    That is,
-    %
-    \begin{equation*}
-        v^*(w) = 
-        \max \left\{
-            \frac{w}{1-\beta}
-            ,\,
-            c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w')
-            \right\}
-            \qquad (w \in \Wsf)
-    \end{equation*}
-    %
+    %That is,
+    %%
+    %\begin{equation*}
+        %v^*(w) = 
+        %\max \left\{
+            %\frac{w}{1-\beta}
+            %,\,
+            %c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w')
+            %\right\}
+            %\qquad (w \in \Wsf)
+    %\end{equation*}
+    %%
 
-    \vspace{1em}
+    %\vspace{1em}
 
-    The infinite-horizon \navy{continuation value} is defined as
-    %
-    \begin{equation*}
-        h^* := c + \beta \sum_{w'} v^*(w') \phi(w') 
-    \end{equation*}
-    %
+    %The infinite-horizon \navy{continuation value} is defined as
+    %%
+    %\begin{equation*}
+        %h^* := c + \beta \sum_{w'} v^*(w') \phi(w') 
+    %\end{equation*}
+    %%
 
-    \emp{Key question}: how to solve for $v^*$?  
+    %\emp{Key question}: how to solve for $v^*$?  
 
-\end{frame}
+%\end{frame}
 
 
 \begin{frame}
@@ -1015,6 +1010,7 @@
 \end{frame}
 
 \begin{frame}
+    \frametitle{Optimal Choice}
     
     Recall: The optimal decision at any given time, facing current wage draw $w \in
     \Wsf$, is 
@@ -1027,93 +1023,9 @@
 
     Let's try to write this in the language of dynamic programming
     
-    \vspace{1em}
-
-    Dynamic programming centers around the problem of finding optimal
-    \emp{policies}
 
 \end{frame}
 
-
-\begin{frame}
-    \frametitle{Optimal Policies}
-
-    In general, for a dynamic program, choices consist of a sequence $(A_t)_{t
-    \geq 0}$ 
-    %
-    \begin{itemize}
-        \item specifies how the agent acts at each $t$ 
-    \end{itemize}
-
-
-    Since agents are not clairvoyant, so we assume that $A_t$ cannot
-    depend on future events
-
-    In other words, for some function $\sigma_t$,
-    %
-    \begin{equation*}
-        A_t = \sigma_t(
-                    X_t, A_{t-1}, X_{t-1}, A_{t-2}, X_{t-2}, \ldots
-                    A_0, X_0)
-    \end{equation*}
-    %
-
-    In dynamic programming, $\sigma_t$ is called a \navy{policy function}
-
-\end{frame}
-
-
-\begin{frame}
-
-    \emp{Key idea} Design the state such that $X_t$ is
-    %
-    \begin{itemize}
-        \item \underline{sufficient to determine the optimal current action}
-        \item but not so large as to be unmanagable
-    \end{itemize}
-
-    \begin{itemize}
-        \item Finding the state is an art!
-    \end{itemize}
-    
-    \Eg Recall retailer who chooses stock orders and prices in each period
-
-    What to include in the current state?
-
-    \begin{itemize}
-        \item level of current inventories 
-        \item interest rates and inflation?
-        \item the rate at which inventories have changed?
-        \item competitors prices?
-    \end{itemize}
-
-\end{frame}
-
-
-
-\begin{frame}
-    
-    So suppose state $X_t$ determines the current action $A_t$
-
-    Then we can write $A_t = \sigma(X_t)$ for some function $\sigma$
-
-    Note that we dropped the time subscript on $\sigma$
-
-    No loss of generality: can include time in the current state 
-    %
-    \begin{itemize}
-        \item i.e., expand $X_t$ to $\hat X_t = (t, X_t)$
-    \end{itemize}
-
-    Depends on the problem at hand
-    %
-    \begin{itemize}
-        \item For the job search model with finite horizon, the date matters
-        \item For the infinite horizon version of the problem, however, the
-            agent always looks forward toward an infinite horizon
-    \end{itemize}
-
-\end{frame}
 
 
 \begin{frame}
@@ -1161,6 +1073,8 @@
     \end{itemize}
 
 
+            \vspace{0.5em}
+            \vspace{0.5em}
     We can also express a $v^*$-greedy policy via
     %
     \begin{equation}
@@ -1175,13 +1089,13 @@
     \end{equation}
     %
 
+            \vspace{0.5em}
+            \vspace{0.5em}
     The term $w^*$ in \eqref{eq:opjs3d} is called the \navy{reservation
     wage}
 
     \begin{itemize}
-        \item Same ideas as before, different language
-            \vspace{0.5em}
-        \item We prove optimality more carefully later
+        \item Same ideas, different language
     \end{itemize}
 
 \end{frame}
@@ -1191,14 +1105,20 @@
     \frametitle{Computation}
 
     Since $T$ is globally stable on $\vV$, we can compute an approximate
-    optimal policy by 
+    optimal policy as follows
+
+            \vspace{0.5em}
     %
     \begin{enumerate}
-        \item applying successive approximation on $T$ to compute $v^*$
-        \item calculate a $v^*$-greedy policy
+        \item apply successive approximation on $T$ to compute $v \approx v^*$
+            \vspace{0.5em}
+        \item calculate a $v$-greedy policy
     \end{enumerate}
 
-    In dynamic programming, this approach is called \navy{value function iteration}
+            \vspace{0.5em}
+            \vspace{0.5em}
+            \vspace{0.5em}
+    This approach is called \navy{value function iteration}
 
 \end{frame}
 
@@ -1256,18 +1176,25 @@
 
 
 \begin{frame}
-    \frametitle{Computing the Continuation Value Directly}
+    \frametitle{Reducing Dimensionality}
 
-    We used a standard dynamic programming approach to solve this problem
+    We used VFI because it's standard
 
+            \vspace{0.5em}
+            \vspace{0.5em}
     Sometimes we can find more efficient ways to solve particular problems
 
-    For the infinite horizon job search problem, a more efficient way exists
+            \vspace{0.5em}
+            \vspace{0.5em}
+    In this case we can --- by computing the continuation value directly
 
-    The idea is to compute the continuation value directly
-
+            \vspace{0.5em}
+            \vspace{0.5em}
     This shifts the problem from $n$-dimensional to one-dimensional
 
+        \vspace{0.5em}
+        \vspace{0.5em}
+        \emp{Key message:} Look for ways to reduce dimensionality
 \end{frame}
 
 
@@ -1369,7 +1296,7 @@
 
     %
     \begin{enumerate}
-        \item Compute $h^*$ via successive approximation on $g$
+        \item Compute $h \approx h^*$ via successive approximation on $g$
             \vspace{1em}
             \begin{itemize}
                 \item Iteration in $\RR$, not $\RR^n$
@@ -1383,10 +1310,15 @@
                 \left\{
                     \frac{w}{1-\beta}
                     \geq
-                    h^*
+                    h
                 \right\}
             \end{equation*}
     \end{enumerate}
+
+
+            \vspace{1em}
+            \vspace{1em}
+    \Ex Implement and compare timing with VFI
 
 \end{frame}
 
