@@ -24,9 +24,29 @@
     Summary of this lecture:
 
     \begin{itemize}
-        \item Foobar
+        \item Introduce dynamic programming
             \vspace{0.3em}
-        \item Foobar
+            \vspace{0.3em}
+        \item Introduce the RDP framework and provide examples
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \begin{itemize}
+                \item inventories, optimal savings, job search
+            \end{itemize}
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item Provide RDP optimality results
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item Discuss algorithms
+            \vspace{0.3em}
+            \vspace{0.3em}
+        \item Show algorithms and their performance for some case
+            \vspace{0.3em}
+            \vspace{0.3em}
+            \begin{itemize}
+                \item optimal savings, optimal investment...
+            \end{itemize}
     \end{itemize}
 
             \vspace{0.3em}
@@ -83,7 +103,6 @@
             \vspace{0.3em}
             \vspace{0.3em}
         \begin{itemize}
-            \item Some aggregation of $R_0, R_1, \ldots$
             \vspace{0.3em}
             \vspace{0.3em}
             \item \Eg $\EE [ R_0 + \beta R_1 + \beta^2 R_2 + \cdots]$ for
@@ -114,571 +133,499 @@
 \end{frame}
 
 
-\begin{frame}
+%\begin{frame}
 
-    \Eg A retailer sets prices and manages inventories to maximize profits
+    %\Eg A retailer sets prices and manages inventories to maximize profits
+
+    %\begin{itemize}
+        %\item $X_t$ measures 
+            %\begin{itemize}
+                %\item current business environment
+            %\vspace{0.3em}
+                %\item the size of the inventories
+            %\vspace{0.3em}
+                %\item prices set by competitors, etc. 
+            %\end{itemize}
+            %\vspace{0.3em}
+        %\item $A_t$ specifies current prices and orders of new stock
+            %\vspace{0.3em}
+            %\vspace{0.3em}
+        %\item $R_t$ is current profit $\pi_t$
+            %\vspace{0.3em}
+            %\vspace{0.3em}
+        %\item Lifetime reward is 
+            %%
+            %\begin{equation*}
+                %\EE \left[ \pi_0 + \frac{1}{1+r} \pi_1 
+                    %+ \left(\frac{1}{1+r}\right)^2 \pi_2
+                    %+ \cdots \right]
+                    %= \text{EPV}
+            %\end{equation*}
+    %\end{itemize}
+
+
+%\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Example: Optimal Inventories}
+
+    Given a demand process $(D_t)_{t \geq 0}$, inventory $(X_t)_{t \geq 0}$
+    obeys
+    %
+    \begin{equation*}
+        X_{t+1} = m(X_t - D_{t+1} ) + A_t
+    \end{equation*}
+    %
+    where
 
     \begin{itemize}
-        \item $X_t$ measures 
-            \begin{itemize}
-                \item current business environment
-            \vspace{0.3em}
-                \item the size of the inventories
-            \vspace{0.3em}
-                \item prices set by competitors, etc. 
-            \end{itemize}
-            \vspace{0.3em}
-        \item $A_t$ specifies current prices and orders of new stock
-            \vspace{0.3em}
-            \vspace{0.3em}
-        \item $R_t$ is current profit $\pi_t$
-            \vspace{0.3em}
-            \vspace{0.3em}
-        \item Lifetime reward is 
-            %
-            \begin{equation*}
-                \EE \left[ \pi_0 + \frac{1}{1+r} \pi_1 
-                    + \left(\frac{1}{1+r}\right)^2 \pi_2
-                    + \cdots \right]
-                    = \text{EPV}
-            \end{equation*}
+        \item $m(y) := y \vee 0$
+    \vspace{0.5em}
+        \item $A_t$ is units of stock ordered this period 
+    \vspace{0.5em}
+        \item The firm can store at most $K$ items at one time
     \end{itemize}
 
+    \vspace{0.5em}
+    The state space is $\Xsf := \{0, \ldots, K\}$
+
+    \vspace{0.5em}
+    \vspace{0.5em}
+    We assume $(D_t) \iidsim \phi \in \dD(\ZZ+)$  
 
 \end{frame}
 
-
-
-\begin{frame}
-    \frametitle{Markov Decision Processes}    
-
-
-    \begin{itemize}
-        \item A class of dynamic programs
-    \vspace{0.5em}
-        \item Broad enough to encompass many economic applications
-    \vspace{0.5em}
-        \item Includes optimal stopping problems as a special case
-    \vspace{0.5em}
-        \item Clean, powerful theory
-    \vspace{0.5em}
-        \item A range of important algorithms 
-    \end{itemize}
-
-    \vspace{0.5em}
-    Also a cornerstone for
-    %
-    \begin{itemize}
-        \item reinforcement learning, artificial intelligence, etc.
-    \end{itemize}
-
-\end{frame}
-
-
 \begin{frame}
     
-    MDPs are dynamic programs characterized by two features
+    Profits are given by
     %
-    \begin{enumerate}
-        \item Rewards are additively separable:
-            %
-            \begin{equation*}
-                \text{lifetime reward }
-                = \EE \sum_{t \geq 0} \beta^t R_t
-            \end{equation*}
-        \item The discount rate is constant
-    \end{enumerate}
-
-    \vspace{0.5em}
-    \vspace{0.5em}
-    For now we restrict attention to \underline{finite} state and action spaces
-
-    \vspace{0.5em}
-    \begin{itemize}
-        \item Routinely used in quantitative applications
-    \vspace{0.5em}
-        \item Avoids technical issues we can put aside for later
-    \end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Notation}
-
-    Let $\Xsf$ and $\Asf$ be any sets
-    
-    \vspace{0.5em}
-    A \navy{correspondence} $\Gamma$ from $\Xsf$ to $\Asf$
-    is a map that associates each $x \in \Xsf$ to a subset of $\Asf$
-    
-    \vspace{0.5em}
-    \begin{itemize}
-        \item called \navy{nonempty} if $\Gamma(x) \not= \emptyset$ for all $x
-            \in \Xsf$
-    \end{itemize}
-    \vspace{0.5em}
-    \vspace{0.5em}
-
-    \Egs
+    \begin{equation*}
+        \pi_t := X_t \wedge D_{t+1} - c A_t - \kappa \1\{A_t > 0\}
+    \end{equation*}
+    %
 
     \begin{itemize}
-        \item $\Gamma(x) = [0, x]$ is a correspondence from $\RR$ to $\RR$
+        \item Orders in excess of
+            inventory are lost 
     \vspace{0.5em}
-        \item $\Gamma(x) = [-x, x]$ is a nonempty correspondence from $\RR$ to $\RR$
+        \item $c$ is unit product cost (and unit sales prices $=1$)
+    \vspace{0.5em}
+        \item $\kappa$ is a fixed cost of ordering inventory
     \end{itemize}
 
-\end{frame}
-
-
-
-\begin{frame}
-    
     \vspace{0.5em}
-    We study a controller who, at each integer $t \geq 0$
+    \vspace{0.5em}
+
+    With $\beta := 1/(1+r)$ and $r > 0$, the value of the firm is 
     %
-    \begin{enumerate}
-        \item observes the current state $X_t$
-    \vspace{0.5em}
-        \item responds with an action $A_t$
-    \end{enumerate}
-
-    \vspace{0.5em}
-    Her aim is to maximize expected discounted
-    rewards
-    %
-    \begin{equation*}\label{eq:dmdp_ob}
-        \EE \sum_{t \geq 0} \beta^t r(X_t, A_t),
-        \qquad X_0 = x_0 \text{ given}
+    \begin{equation*}
+        V_0 = \EE \sum_{t \geq 0} \beta^t \pi_t
     \end{equation*}
     %
 
     \vspace{0.5em}
-    We take as given 
-    %
-    \begin{enumerate}
-        \item a finite set $\Xsf$ called the \navy{state space} and
     \vspace{0.5em}
-        \item a finite set $\Asf$ called the \navy{action space}
-    \end{enumerate}
-
-
-\end{frame}
-
-\begin{frame}
-
-    The actions of the controller are limited 
-    by a \navy{feasible correspondence} $\Gamma$
-
-    \begin{itemize}
-        \item A correspondence from $\Xsf$ to $\Asf$
-    \vspace{0.5em}
-        \item $\Gamma(x)$ is the set of actions available to the controller in
-            state $x$
-    \end{itemize}
-
-    \vspace{0.5em}
-    \vspace{0.5em}
-
-    Given $\Gamma$, we set
-    %
-    $$\Gsf := \setntn{(x, a) \in \Xsf \times \Asf}{a \in \Gamma(x)}$$
-
-    \vspace{0.5em}
-    \begin{itemize}
-        \item called the set of \navy{feasible state-action pairs}
-    \end{itemize}
-
-
-    \vspace{0.5em}
-    \vspace{0.5em}
-    Reward $r(x, a)$ is received at feasible state-action pair $(x, a)$, 
-
-\end{frame}
-
-
-\begin{frame}
-
-
-
-    A \navy{stochastic kernel} from $\Gsf$ to $\Xsf$ is a map 
-    $P \colon \Gsf \times \Xsf \to \RR_+$
-            satisfying
-            %
-            \begin{equation*}
-                \sum_{x' \in \Xsf} P(x, a, x') = 1
-                \quad \text{ for all $(x,a)$ in $\Gsf$} 
-            \end{equation*}
-            %
-
-    \vspace{0.5em}
-    \vspace{0.5em}
-    Interpretation
-    %
-    \begin{itemize}
-        \item For each feasible state-action pair, $P(x,a, \cdot)$ is a
-            distribution
-    \vspace{0.5em}
-        \item The next period state $x'$ is selected from $P(x,a, \cdot)$
-    \end{itemize}
-
-
-    \vspace{0.5em}
-    \vspace{0.5em}
-    \vspace{0.5em}
-
-    Now let's put it all together:
-
-\end{frame}
-
-
-\begin{frame}
-
-    Given $\Xsf$ and $\Asf$, a \navy{Markov decision process}
-     (\navy{MDP}) is a tuple $(\Gamma, \beta, r, P)$ where
-    %
-    \begin{enumerate}
-        \item $\Gamma$ is a nonempty correspondence from $\Xsf \to \Asf$
-    \vspace{0.5em}
-        \item $\beta$ is a constant in $(0, 1)$
-    \vspace{0.5em}
-        \item $r$ is a function from $\Gsf$ to $\RR$
-    \vspace{0.5em}
-        \item $P$ is a stochastic kernel from $\Gsf$
-            to $\Xsf$
-    \vspace{0.5em}
-    \end{enumerate}
-       
-    \vspace{0.5em}
-    In the foregoing,
-    %
-    \begin{itemize}
-        \item $\beta$ is called the \navy{discount factor}
-    \vspace{0.5em}
-        \item $r$ is called the \navy{reward function}
-    \end{itemize}
+    Objective: maximize (shareholder) value
 
 \end{frame}
 
 
 \begin{frame}
     
-    {\small
-    \begin{algorithm}[H]
-    \DontPrintSemicolon
-    $t \leftarrow 0$ \;
-    input $X_0$ \;
-    \While{$t < \infty$}
-    {
-        observe $X_t$   \;
-        choose action $A_t$ from $\Gamma(X_t)$  \;
-        receive reward $r(X_t, A_t)$   \;
-        draw $X_{t+1}$ from $P(X_t, A_t, \cdot)$   \;
-        $t \leftarrow t + 1$ \;
-    }
-    \caption{\label{algo:d_mdp} MDP dynamics: states, actions, and rewards}
-    \end{algorithm}
-    }
-
-    \vspace{0.5em}
-    Rules:
-    %
-    \begin{itemize}
-        \item Choose $(A_t)_{t \geq 0}$ to maximize $\EE \sum_{t \geq 0}
-            \beta^t r(X_t, A_t)$
-        \item Actions don't depend on future outcomes 
-    \end{itemize}
-
-\end{frame}
-
-
-
-\begin{frame}
-    
-    The \navy{Bellman equation} is
+    Expected current profit is
     %
     \begin{equation*}
-            v(x)
-            = \max_{a \in \Gamma(x)}
-            \left\{
-                r(x, a)
-                + \beta
-                \sum_{x' \in \Xsf} v(x') P(x, a, x')
-            \right\}
-    \end{equation*}
-    %
-
-
-    Reduces an infinite horizon problem to a two period
-    problem
-
-    In the two period problem, the controller trades off
-    %
-    \begin{enumerate}
-        \item current rewards and 
-        \item expected discounted value from future states
-    \end{enumerate}
-
-    Current actions influence both terms
-
-\end{frame}
-
-
-\begin{frame}
-    
-    ADD inventory example
-
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Policies}
-    
-    Actions will be governed by policies
-    %
-    \begin{itemize}
-        \item maps from states to actions
-        \vspace{0.5em}
-        \item today's action is a function of today's state!
-    \end{itemize}
-
-    \vspace{0.5em}
-    The set of \navy{feasible policies} is
-    %
-    \begin{equation*}
-        \Sigma := 
-        \text{ all }
-            \sigma \in \Asf^\Xsf
-            \st 
-            \sigma(x) \in \Gamma(x) \text{ for all } x \in \Xsf
-    \end{equation*}
-    %
-
-    \vspace{0.5em}
-    Meaning of selecting $\sigma$ from $\Sigma$: 
-
-    \begin{itemize}
-        \item respond to state $X_t$ with action $A_t := \sigma(X_t)$ at all $t$
-    \end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Dynamics}
-
-    What happens when we always follow $\sigma \in \Sigma$?
-    
-    \vspace{0.5em}
-    Now 
-    %
-    \begin{equation*}
-        X_{t+1} \sim P(X_t, \sigma(X_t), \cdot)
-        \quad \text{at every $t$}
+        r(x, a)  := \sum_{d \geq 0} (x \wedge d) \phi(d) 
+            - c a - \kappa \1\{a > 0\}
     \end{equation*}
 
     \vspace{0.5em}
-    Thus, $X_t$ updates according to the stochastic matrix 
+    \vspace{0.5em}
+    The set of feasible order sizes
+    at $x$ is 
     %
     \begin{equation*}
-        P_\sigma(x, x') := P(x, \sigma(x), x')
-        \qquad (x, x' \in \Xsf)
+        \Gamma(x) := \{0, \ldots, K - x\}
     \end{equation*}
     %
-
     \vspace{0.5em}
-    The state process becomes $P_\sigma$-Markov
 
-    \begin{itemize}
-        \item Fixing a policy ``closes the loop'' in the state dynamics
-        \vspace{0.5em}
-        \item Solving an MDP means choosing a Markov chain!
-    \end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-    \frametitle{Rewards}
-    
-    Under the policy $\sigma$, rewards at $x$ are $r(x, \sigma(x))$  
-
-    \vspace{0.5em}
-    Let
+    The Bellman equation is
     %
     \begin{equation*}
-        r_\sigma(x) := r(x, \sigma(x))
-        \qquad (x \in \Xsf)
-    \end{equation*}
-    %
-
-    \vspace{0.5em}
-    Now set 
-    %
-    $$\EE_x := \EE[ \; \cdot \; \given X_0 = x]$$
-
-    \vspace{0.5em}
-    Then the expected time $t$ reward is
-    %
-    \begin{equation*}
-        \EE_x  \, r(X_t, A_t) 
-        = \EE_x  \, r_\sigma(X_t)  
-        = (P_\sigma^t \, r_\sigma) (x)
-    \end{equation*}
-    %
-
-\end{frame}
-
-
-
-\begin{frame}
-
-    Let $(X_t)_{t \geq 0}$ be $P_\sigma$-Markov with $X_0 = x$
-    
-    \vspace{0.5em}
-    \vspace{0.5em}
-    The lifetime value of $\sigma$ starting from $x$ is
-    %
-    \begin{equation*}
-        v_\sigma (x) 
-        := \EE_x \sum_{t \geq 0} \beta^t
-            r_\sigma(X_t) 
-    \end{equation*}
-    %
-
-
-    \vspace{0.5em}
-    Since $\beta < 1$, we have $r(\beta P_\sigma) <1$ and hence
-    %
-    \begin{equation*}
-        v_\sigma 
-        = \sum_{t \geq 0} \beta^t P_\sigma^t \, r_\sigma 
-        = (I - \beta P_\sigma)^{-1} \, r_\sigma 
-    \end{equation*}
-    %
-
-    \vspace{0.5em}
-    The \navy{value function}\index{Value function} is defined as 
-    %
-    \begin{equation*}
-        v^*(x) = \max_{\sigma \in \Sigma} v_\sigma(x)
-        \qquad (x \in \Xsf)
-    \end{equation*}
-    %
-
-\end{frame}
-
-
-\begin{frame}
-    
-    Recall that the Bellman equation is 
-    %
-    \begin{equation*}
-            v(x)
-            = \max_{a \in \Gamma(x)}
-            \left\{
-                r(x, a)
-                + \beta
-                \sum_{x' \in \Xsf} v(x') P(x, a, x')
-            \right\}
-    \end{equation*}
-    %
-
-    \vspace{0.5em}
-    The \navy{Bellman operator} for the MDP
-    is the self-map $T$ on $\RR^\Xsf$ defined by
-    %
-    \begin{equation*}
-        (Tv)(x)
-            = \max_{a \in \Gamma(x)}
-            \left\{
-                r(x, a)
-                + \beta
-                \sum_{x' \in \Xsf} v(x') P(x, a, x')
-            \right\}
-    \end{equation*}
-    %
-
-    Obviously 
-    %
-    \begin{itemize}
-        \item $Tv=v$ iff $v$ satisfies the Bellman equation
-    \vspace{0.5em}
-        \item $T$ is order-preserving on $\RR^\Xsf$
-    \end{itemize}
-
-\end{frame}
-
-
-
-\begin{frame}
-    
-    Fix $v \in \RR^\Xsf$
-
-    \vspace{0.5em}
-    A policy $\sigma \in \Sigma$ is called \navy{$v$-greedy} if
-    %
-    \begin{equation*}
-        \forall \; x \in \Xsf, \;\;
-        \sigma(x)
-        \in \argmax_{a \in \Gamma(x)}
+        v(x)
+        = \max_{a \in \Gamma(x)} 
         \left\{
             r(x, a)
             + \beta
-            \sum_{x' \in \Xsf} v(x') P(x, a, x')
+            \sum_{d \geq 0} v(m(x - d) + a) \phi(d)
         \right\}
     \end{equation*}
-    %
 
-    \vspace{0.5em}
-    A policy $\sigma \in \Sigma$ is called \navy{optimal} if
+\end{frame}
+
+\begin{frame}
+    
+    The \emp{standard solution procedure} for this problem is VFI
+
+    The steps are
+    %
+    \begin{enumerate}
+        \item define the Bellman operator $T$ via
+            %
+            \begin{equation*}
+                (Tv)(x)
+                = \max_{a \in \Gamma(x)} 
+                \left\{
+                    r(x, a)
+                    + \beta
+                    \sum_{d \geq 0} v(m(x - d) + a) \phi(d)
+                \right\}
+            \end{equation*}
+        \item use successive approximation to (approximately) compute the
+            fixed point $v^*$ and
+        \item compute a $v^*$-greedy greedy policy $\sigma^*$, which satisfies
+            %
+            \begin{equation*}
+                \sigma^*(x)
+                \in \argmax_{a \in \Gamma(x)} 
+                \left\{
+                    r(x, a)
+                    + \beta
+                    \sum_{d \geq 0} v^*(m(x - d) + a) \phi(d)
+                \right\}
+            \end{equation*}
+    \end{enumerate}
+
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Optimal Savings with Labor Income}
+
+    
+    Wealth evolves according to
     %
     \begin{equation*}
-        v_\sigma = v^*
+        W_{t+1} = R W_t + Y_t - C_t
+        \qquad (t = 0, 1, \ldots)
     \end{equation*}
-
-    Thus,
     %
-    \begin{center}
-        $\sigma$ is optimal $\iff$ lifetime value is maximal at each state  
-    \end{center}
+
+        \vspace{0.5em}
+    \begin{itemize}
+        \item $(W_t)$ takes values in finite set $\Wsf \subset \RR_+$ 
+        \vspace{0.5em}
+        \item $(Y_t)$ is $Q$-Markov chain on finite set $\Ysf$ 
+        \vspace{0.5em}
+        \item $C_t, W_t \geq 0$
+    \end{itemize}
+
+        \vspace{0.5em}
+    The household maximizes
+
+    %
+    \begin{equation*}
+        \EE \sum_{t \geq 0} \beta^t u(C_t)
+    \end{equation*}
 
 
 \end{frame}
 
 \begin{frame}
     
-    {\bf Proposition.} For the MDP described above
+    The Bellman equation is
     %
+    \begin{multline*}
+        v(w, y) = 
+        \\
+        \max_{w' \in \Gamma(w, y)}
+        \left\{
+            u(R w + y - w')
+            + \beta \sum_{y' \in \Ysf} v(w', y') Q(y, y')
+        \right\}
+    \end{multline*}
+    %
+
+        \vspace{0.5em}
+        \vspace{0.5em}
+    The standard solution procedure is VFI
+
     \begin{enumerate}
-        \item $v^*$ is the unique fixed point of $T$
-            in $\RR^\Xsf$
-    \vspace{0.5em}
-        \item $T$ is a contraction of modulus $\beta$ on $\RR^\Xsf$ under the
-            norm $\| \cdot \|_\infty$ 
-    \vspace{0.5em}
-        \item A feasible policy is optimal if and only it is
-            $v^*$-greedy
-    \vspace{0.5em}
-        \item At least one optimal policy exists
+        \item Set up Bellman operator $T$
+        \vspace{0.5em}
+        \item Iterate with $T$ from some initial guess to approximate $v^*$
+        \vspace{0.5em}
+        \item Compute the $v^*$-greedy policy
     \end{enumerate}
-    %
-
-
-    \vspace{0.5em}
-    \vspace{0.5em}
-    Proof: 
-    %
-    \begin{itemize}
-        \item similar to that for optimal stopping
-    \vspace{0.5em}
-        \item full details deferred until we study RDPs
-    \end{itemize}
-
 
 \end{frame}
 
 
+
+\begin{frame}
+    \frametitle{Recursive Decision Processes}
+
+    We will study an abstract dynamic program with Bellman equation
+    %
+    \begin{equation*}
+        v(x) = \max_{a \in \Gamma(x)} B(x, a, v)
+    \end{equation*}
+
+        \vspace{0.5em}
+        \vspace{0.5em}
+    Advantages of ``abstract'' dynamic programming
+
+    \begin{itemize}
+        \item Subsumes standard Markov decision processes
+        \vspace{0.5em}
+        \item Can handle state-dependent discounting
+        \vspace{0.5em}
+        \item Can handle recursive preferences
+        \vspace{0.5em}
+        \item Abstraction means clean proofs
+        \vspace{0.5em}
+        \item Abstraction allows better analysis of algorithms
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Let $\Xsf$ and $\Asf$ be finite sets (\navy{state} and \navy{action spaces})
+
+        \vspace{0.5em}
+    Actions are constrained by 
+        a nonempty correspondence $\Gamma$ from $\Xsf$ to $\Asf$ called
+            the \navy{feasible correspondence}
+
+
+    The feasible correspondence in turn defines
+    %
+    \begin{enumerate}
+        \item the \navy{feasible state-action pairs}
+            %
+            \begin{equation*}
+                \Gsf := \setntn{(x, a) \in \Xsf \times \Asf}{a \in \Gamma(x)}
+            \end{equation*}
+            %
+        \item the set of \navy{feasible policies} 
+            %
+            \begin{equation*}
+                \Sigma := 
+                    \setntn{\sigma \in \Asf^\Xsf}
+                    {\sigma(x) \in \Gamma(x) \text{ for all } x \in \Xsf}.
+            \end{equation*}
+            %
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+    
+    Given $\Xsf$, $\Asf$ and $\Gamma$, a \navy{recursive
+    decision process} (RDP) consists of
+    %
+    
+    \begin{enumerate}
+        \item a closed subset $\vV$ of $\RR^\Xsf$ called the set of
+            \navy{candidate value functions} and
+        \vspace{0.5em}
+        \item a  \navy{value aggregator}, which is a function
+                %
+                \begin{equation*}
+                    B \colon \Gsf \times \vV \to \RR
+                \end{equation*}
+                %
+              satisfying $v, w \in \vV$ and $v \leq w \implies$
+              %
+              \vspace{0.5em}
+              \begin{equation*}
+                B(x, a, v) \leq B(x, a, w) \; \text{ for all $(x, a) \in \Gsf$}
+              \end{equation*}
+                %
+              and 
+                %
+                \begin{equation*}
+                    \sigma \in \Sigma 
+                    \, \text{ and } \,
+                    v \in \vV
+                    \; \implies \;
+                    w \in \vV
+                    \quad \text{ where }
+                    w(x) := B(x, \sigma(x), v)
+                \end{equation*}
+                %
+    \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}
+    
+
+    \Eg For the inventory problem we set 
+    %
+    \begin{itemize}
+        \item $\Gamma(x) := \{0, \ldots, K - x\}$,
+        \item $\vV = \RR^\Xsf$ and
+        %
+        \begin{equation*}
+            B(x, a, v) :=
+            \left\{
+                r(x, a)
+                + \beta
+                \sum_{d \geq 0} v(m(x - d) + a) \phi(d)
+            \right\}
+        \end{equation*}
+    \end{itemize}
+
+    The Bellman equation is then $v(x) = \max_{a \in \Gamma(x)} B(x, a, v)$ 
+
+    The function $B$ is a valid value aggergator
+
+    For example, if $v \leq w$, then
+    %
+    \begin{equation*}
+        B(x, a, v) \leq B(x, a, w)
+    \end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Discuss possible generalizations
+
+    \begin{itemize}
+        \item state-dependent discounting
+        \item recursive preferences
+    \end{itemize}
+     
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Operators}
+
+    We define, for each $\sigma \in \Sigma$, the \navy{policy operator}
+    $T_\sigma$ via
+    %
+    \begin{equation*}
+        (T_\sigma \, v)(x) = B(x, \sigma(x), v)
+        \qquad (x \in \Xsf).
+    \end{equation*}
+    %
+
+
+    Given $v$ in $\vV$, we say that a policy $\sigma \in \Sigma$ is
+    \navy{$v$-greedy} for the RDP $(\Gamma, \vV, B)$ if 
+    %
+    \begin{equation*}
+        \sigma(x) \in \argmax_{a \in \Gamma(x)} B(x, a, v)
+        \qquad \text{for all } x \in \Xsf.
+    \end{equation*}
+    %
+
+    The \navy{Bellman operator} for the RDP $(\Gamma, \vV, B)$ is
+    %
+    \begin{equation*}
+        (T v)(x) = \max_{a \in \Gamma(x)} B(x, \sigma(x), v)
+        \qquad (x \in \Xsf, \; v \in \vV).
+    \end{equation*}
+    %
+
+\end{frame}
+
+
+\begin{frame}
+
+    \Eg The Bellman operator for the optimal savings example is
+    %
+    \begin{multline*}
+        (Tv)(w, y) = 
+        \\
+        \max_{w' \in \Gamma(w, y)}
+        \left\{
+            u(R w + y - w')
+            + \beta \sum_{y' \in \Ysf} v(w', y') Q(y, y')
+        \right\}
+    \end{multline*}
+    %
+    
+        \vspace{0.5em}
+        \vspace{0.5em}
+
+    The policy operator for given $\sigma \in \Sigma$ is 
+    %
+    \begin{multline*}
+        (T_\sigma \, v)(w, y) = 
+        \\
+        u(R w + y - \sigma(w, y))
+            + \beta \sum_{y' \in \Ysf} v(\sigma(w, y), y') Q(y, y')
+    \end{multline*}
+    %
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Stability}
+    
+    Let $\rR := (\Gamma, \vV, B)$ be an RDP with associated Bellman
+    operator $T$ and policy operators $\{T_\sigma\}_{\sigma \in \Sigma}$
+
+        \vspace{0.5em}
+    We call $\rR$ \navy{globally stable} if
+    %
+    \begin{enumerate}
+        \item $T$ is globally stable on $\vV$ and
+        \vspace{0.5em}
+        \item $T_\sigma$ is globally stable on $\vV$ for all $\sigma \in \Sigma$.
+    \end{enumerate}
+
+    \Eg In the inventory problem,
+
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Lifetime Value}
+
+    For a globally stable RDP, given $\sigma \in \Sigma$, let
+    $v_\sigma$ be the unique fixed point of $T_\sigma$ 
+
+    By construction, $v_\sigma$ obeys
+    %
+    \begin{equation*}
+        v_\sigma(x) = B(x, \sigma(x), v_\sigma)
+        \quad \text{for all } x \in \Xsf
+    \end{equation*}
+%
+
+
+    \emp{Key idea:} $v_\sigma$ represents the lifetime value of following the
+    policy $\sigma$ in each period 
+
+    \Eg In the inventory problem, where
+    %
+    \begin{equation*}
+        v_\sigma(x)
+        = r(x, \sigma(x))
+                + \beta
+                \sum_{d \geq 0} v(m(x - d) + \sigma(x)) \phi(d)
+    \end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+    
+
+\end{frame}
 
 \end{document}
 
