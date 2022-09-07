@@ -175,23 +175,25 @@
     obeys
     %
     \begin{equation*}
-        X_{t+1} = m(X_t - D_{t+1} ) + A_t
+        X_{t+1} = F(X_t, A_t, D_{t+1}) 
     \end{equation*}
     %
     where
 
     \begin{itemize}
-        \item $m(y) := y \vee 0$
-    \vspace{0.5em}
         \item $A_t$ is units of stock ordered this period 
-    \vspace{0.5em}
-        \item The firm can store at most $K$ items at one time
+        \vspace{0.5em}
+        \item $F(x, a, d) := \max\{x - d, 0\} + a$
     \end{itemize}
 
     \vspace{0.5em}
-    The state space is $\Xsf := \{0, \ldots, K\}$
+    The firm can store at most $K$ items at one time
 
     \vspace{0.5em}
+    \begin{itemize}
+        \item The state space is $\Xsf := \{0, \ldots, K\}$
+    \end{itemize}
+
     \vspace{0.5em}
     We assume $(D_t) \iidsim \phi \in \dD(\ZZ+)$  
 
@@ -250,9 +252,13 @@
         \Gamma(x) := \{0, \ldots, K - x\}
     \end{equation*}
     %
-    \vspace{0.5em}
+    \vspace{-1.5em}
+    \begin{itemize}
+        \item $\Gamma$ is the \navy{feasible correspondence}
+    \end{itemize}
 
-    The Bellman equation is
+    \vspace{0.5em}
+    The \navy{Bellman equation} is
     %
     \begin{equation*}
         v(x)
@@ -260,7 +266,7 @@
         \left\{
             r(x, a)
             + \beta
-            \sum_{d \geq 0} v(m(x - d) + a) \phi(d)
+            \sum_{d \geq 0} F(x, a, d) \phi(d)
         \right\}
     \end{equation*}
 
@@ -268,9 +274,8 @@
 
 \begin{frame}
     
-    The \emp{standard solution procedure} for this problem is VFI
+    The \emp{standard solution procedure} for this problem is VFI:
 
-    The steps are
     %
     \begin{enumerate}
         \item define the Bellman operator $T$ via
@@ -281,11 +286,13 @@
                 \left\{
                     r(x, a)
                     + \beta
-                    \sum_{d \geq 0} v(m(x - d) + a) \phi(d)
+                    \sum_{d } v(F(x,a,d)) \phi(d)
                 \right\}
             \end{equation*}
-        \item use successive approximation to (approximately) compute the
+            \vspace{0.5em}
+        \item iterate with $T$ to (approximately) compute the
             fixed point $v^*$ and
+            \vspace{0.5em}
         \item compute a $v^*$-greedy greedy policy $\sigma^*$, which satisfies
             %
             \begin{equation*}
@@ -294,7 +301,7 @@
                 \left\{
                     r(x, a)
                     + \beta
-                    \sum_{d \geq 0} v^*(m(x - d) + a) \phi(d)
+                    \sum_{d } v^*(F(x,a,d)) \phi(d)
                 \right\}
             \end{equation*}
     \end{enumerate}
@@ -310,7 +317,7 @@
     Wealth evolves according to
     %
     \begin{equation*}
-        W_{t+1} = R W_t + Y_t - C_t
+        C_t + W_{t+1} \leq R W_t + Y_t 
         \qquad (t = 0, 1, \ldots)
     \end{equation*}
     %
@@ -321,7 +328,7 @@
         \vspace{0.5em}
         \item $(Y_t)$ is $Q$-Markov chain on finite set $\Ysf$ 
         \vspace{0.5em}
-        \item $C_t, W_t \geq 0$
+        \item $C_t \geq 0$
     \end{itemize}
 
         \vspace{0.5em}
@@ -382,9 +389,7 @@
     \begin{itemize}
         \item Subsumes standard Markov decision processes
         \vspace{0.5em}
-        \item Can handle state-dependent discounting
-        \vspace{0.5em}
-        \item Can handle recursive preferences
+        \item Can handle state-dependent discounting, recursive prefs, etc.
         \vspace{0.5em}
         \item Abstraction means clean proofs
         \vspace{0.5em}
@@ -422,6 +427,11 @@
             \end{equation*}
             %
     \end{enumerate}
+
+    \begin{itemize}
+        \item ``follow'' $\sigma$ $\iff$ always respond to state $x$ with action
+            $\sigma(x)$
+    \end{itemize}
 
 \end{frame}
 
@@ -479,12 +489,14 @@
             \left\{
                 r(x, a)
                 + \beta
-                \sum_{d \geq 0} v(m(x - d) + a) \phi(d)
+                \sum_{d \geq 0} v(F(x,a,d)) \phi(d)
             \right\}
         \end{equation*}
     \end{itemize}
 
-    The Bellman equation is then $v(x) = \max_{a \in \Gamma(x)} B(x, a, v)$ 
+    The Bellman equation is then 
+    %
+    $$v(x) = \max_{a \in \Gamma(x)} B(x, a, v)$$
 
     The function $B$ is a valid value aggergator
 
@@ -492,6 +504,37 @@
     %
     \begin{equation*}
         B(x, a, v) \leq B(x, a, w)
+    \end{equation*}
+
+\end{frame}
+
+
+\begin{frame}
+    
+
+    \Eg For the savings problem we set 
+    %
+    \begin{itemize}
+        \item $\Gamma(w, y) := \{w' \in \Wsf \,:\, w' \leq Rw + y\}$,
+        \item $\vV = \RR^\Xsf$ and
+        %
+        \begin{equation*}
+            B((w,y), w', v) :=
+            u(R w + y - w')
+            + \beta \sum_{y' \in \Ysf} v(w', y') Q(y, y')
+        \end{equation*}
+    \end{itemize}
+
+    The Bellman equation is then 
+    %
+    $$v(x) = \max_{a \in \Gamma(x)} B(x, a, v)$$
+
+    The function $B$ is a valid value aggergator
+
+    For example, if $f \leq g$, then
+    %
+    \begin{equation*}
+        B((w,y), w', f) \leq B((w,y), w', g)
     \end{equation*}
 
 \end{frame}
@@ -512,55 +555,50 @@
 \begin{frame}
     \frametitle{Operators}
 
-    We define, for each $\sigma \in \Sigma$, the \navy{policy operator}
-    $T_\sigma$ via
-    %
-    \begin{equation*}
-        (T_\sigma \, v)(x) = B(x, \sigma(x), v)
-        \qquad (x \in \Xsf).
-    \end{equation*}
-    %
-
-
-    Given $v$ in $\vV$, we say that a policy $\sigma \in \Sigma$ is
-    \navy{$v$-greedy} for the RDP $(\Gamma, \vV, B)$ if 
+    Given $v$ in $\vV$, we call $\sigma \in \Sigma$ \navy{$v$-greedy}  if 
     %
     \begin{equation*}
         \sigma(x) \in \argmax_{a \in \Gamma(x)} B(x, a, v)
-        \qquad \text{for all } x \in \Xsf.
+        \qquad \text{for all } x \in \Xsf
     \end{equation*}
     %
 
-    The \navy{Bellman operator} for the RDP $(\Gamma, \vV, B)$ is
+              \vspace{0.5em}
+    The \navy{Bellman operator} is defined by
     %
     \begin{equation*}
-        (T v)(x) = \max_{a \in \Gamma(x)} B(x, \sigma(x), v)
-        \qquad (x \in \Xsf, \; v \in \vV).
+        (T v)(x) = \max_{a \in \Gamma(x)} B(x, a, v)
+        \qquad (x \in \Xsf, \; v \in \vV)
     \end{equation*}
     %
+
+              \vspace{0.5em}
+
+    \begin{itemize}
+        \item $v^*$ solves the Bellman equation iff $v^*$ is a fixed point of $T$
+    \end{itemize}
+
 
 \end{frame}
 
 
 \begin{frame}
 
-    \Eg The Bellman operator for the optimal savings example is
+
+    For each $\sigma \in \Sigma$, the \navy{policy operator} $T_\sigma$ is
     %
-    \begin{multline*}
-        (Tv)(w, y) = 
-        \\
-        \max_{w' \in \Gamma(w, y)}
-        \left\{
-            u(R w + y - w')
-            + \beta \sum_{y' \in \Ysf} v(w', y') Q(y, y')
-        \right\}
-    \end{multline*}
+    \begin{equation*}
+        (T_\sigma \, v)(x) = B(x, \sigma(x), v)
+        \qquad (x \in \Xsf,\; v \in \vV)
+    \end{equation*}
     %
+
     
         \vspace{0.5em}
         \vspace{0.5em}
 
-    The policy operator for given $\sigma \in \Sigma$ is 
+    \Eg The policy operator for the savings problem, given $\sigma \in
+    \Sigma$, is 
     %
     \begin{multline*}
         (T_\sigma \, v)(w, y) = 
@@ -575,39 +613,56 @@
 \begin{frame}
     \frametitle{Stability}
     
-    Let $\rR := (\Gamma, \vV, B)$ be an RDP with associated Bellman
-    operator $T$ and policy operators $\{T_\sigma\}_{\sigma \in \Sigma}$
+    Let $\rR := (\Gamma, \vV, B)$ be an RDP with 
+    %
+    \begin{itemize}
+        \item Bellman operator $T$ and 
+        \item policy operators $\{T_\sigma\}_{\sigma \in \Sigma}$
+    \end{itemize}
 
+
+        \vspace{0.5em}
+        \vspace{0.5em}
         \vspace{0.5em}
     We call $\rR$ \navy{globally stable} if
     %
     \begin{enumerate}
         \item $T$ is globally stable on $\vV$ and
         \vspace{0.5em}
-        \item $T_\sigma$ is globally stable on $\vV$ for all $\sigma \in \Sigma$.
+        \item $T_\sigma$ is globally stable on $\vV$ for all $\sigma \in \Sigma$
     \end{enumerate}
 
+\end{frame}
+
+
+\begin{frame}
+    
     \Eg In the inventory problem,
 
+
 \end{frame}
+
+
 
 
 \begin{frame}
     \frametitle{Lifetime Value}
 
     For a globally stable RDP, given $\sigma \in \Sigma$, let
-    $v_\sigma$ be the unique fixed point of $T_\sigma$ 
-
-    By construction, $v_\sigma$ obeys
+    $v_\sigma$ be the unique solution to
     %
     \begin{equation*}
         v_\sigma(x) = B(x, \sigma(x), v_\sigma)
         \quad \text{for all } x \in \Xsf
     \end{equation*}
-%
+    %
+
+    \begin{itemize}
+        \item the unique fixed point of $T_\sigma$ 
+    \end{itemize}
 
 
-    \emp{Key idea:} $v_\sigma$ represents the lifetime value of following the
+    \emp{Key idea:} $v_\sigma =$ lifetime value of following the
     policy $\sigma$ in each period 
 
     \Eg In the inventory problem, where
@@ -616,7 +671,7 @@
         v_\sigma(x)
         = r(x, \sigma(x))
                 + \beta
-                \sum_{d \geq 0} v(m(x - d) + \sigma(x)) \phi(d)
+                \sum_d v_\sigma (F(x, \sigma(x), d) \phi(d)
     \end{equation*}
 
 \end{frame}

@@ -1,14 +1,11 @@
-Part 2  (Applications)
+Part 2
 
-- 2D equilibrium
 
-- European option with Numba
+- Slides up to Newton's mthod
 
-- Fixed points, successive approximation and Newton's method 
-    - slides
-    - application to Solow
+- Notebook on successive approximation and Newton's method application to Solow
 
-- McCall job search 
-    - slides
-    - code
+- Remaining slides 
+
+- Notebook on the McCall job search problem
 
