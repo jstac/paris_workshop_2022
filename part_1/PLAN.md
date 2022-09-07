@@ -1,10 +1,9 @@
+Part 1 
 
-- Quick introduction to Python
-    - Functions, classes, everything is an object
-    - amalgamate relevant lectures
+- Reivew the getting started lecture
 
-- NumPy, Matplotlib, SciPy
-    - amalgamate relevant lectures
+- Equilibrium notebook
 
-- Numba 
-    - Python vs Julia vs Fortran speed test (?)
+- Finite MCs (provide U Tokyo MC slides without going through them?)
+
+- European options
