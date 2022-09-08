@@ -13,12 +13,62 @@ import numpy as np
 import quantecon as qe
 import jax
 import jax.numpy as jnp
-from solvers import successive_approx
-from jaxopt import FixedPointIteration, AndersonAcceleration
-from investment import Model, create_investment_model
+from collections import namedtuple
 
 # Use 64 bit floats with JAX in order to match NumPy/Numba code
 jax.config.update("jax_enable_x64", True)
+
+
+def successive_approx(T,                     # Operator (callable)
+                      x_0,                   # Initial condition
+                      tolerance=1e-6,        # Error tolerance
+                      max_iter=10_000,       # Max iteration bound
+                      print_step=25,         # Print at multiples
+                      verbose=False):        
+    x = x_0
+    error = tolerance + 1
+    k = 1
+    while error > tolerance and k <= max_iter:
+        x_new = T(x)
+        error = np.max(np.abs(x_new - x))
+        if verbose and k % print_step == 0:
+            print(f"Completed iteration {k} with error {error}.")
+        x = x_new
+        k += 1
+    if error > tolerance:
+        print(f"Warning: Iteration hit upper bound {max_iter}.")
+    elif verbose:
+        print(f"Terminated successfully in {k} iterations.")
+    return x
+
+
+# == Primitives and Operators == #
+
+# A namedtuple definition for storing parameters and grids
+Model = namedtuple("Model", 
+                   ("β", "a_0", "a_1", "γ", "c",
+                    "y_size", "z_size", "y_grid", "z_grid", "Q"))
+
+def create_investment_model(
+        r=0.01,                              # Interest rate
+        a_0=10.0, a_1=1.0,                   # Demand parameters
+        γ=25.0, c=1.0,                       # Adjustment and unit cost 
+        y_min=0.0, y_max=20.0, y_size=100,   # Grid for output
+        ρ=0.9, ν=1.0,                        # AR(1) parameters
+        z_size=150):                         # Grid size for shock
+    """
+    A function that takes in parameters and returns an instance of Model that
+    contains data for the investment problem.
+    """
+    β = 1/(1+r) 
+    y_grid = np.linspace(y_min, y_max, y_size)  
+    mc = qe.tauchen(ρ, ν, n=z_size)
+    z_grid, Q = mc.state_values, mc.P
+
+    model = Model(β=β, a_0=a_0, a_1=a_1, γ=γ, c=c,
+                  y_size=y_size, z_size=z_size,
+                  y_grid=y_grid, z_grid=z_grid, Q=Q)
+    return model
 
 
 def create_investment_model_jax():
@@ -174,8 +224,6 @@ def get_value(σ, constants, sizes, arrays):
 
 
 # == Matrix versions == #
-
-
 
 
 def compute_P_σ(σ, constants, sizes, arrays):

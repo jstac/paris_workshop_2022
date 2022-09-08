@@ -12,4 +12,5 @@ Part 4: JAX and GPU computing
     - Optimal investment but now with JAX
     - Optimal savings
 
+If time permits, also try VFI with Anderson acceleration
 

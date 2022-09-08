@@ -1,9 +1,9 @@
 Part 1 
 
-- Reivew the getting started lecture
+- Reivew the Python by example lecture
 
-- Equilibrium notebook
+- Markov chains and computing expectations (intro to NumPy)
 
-- Finite MCs (provide U Tokyo MC slides without going through them?)
+- Equilibrium notebook (intro to SciPy)
 
-- European options
+- European options (start with quick intro to Numba, compare with Fortran)

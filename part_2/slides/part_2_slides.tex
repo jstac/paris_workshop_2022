@@ -42,46 +42,46 @@
 
 
 
-\begin{frame}
+%\begin{frame}
     
-    Convention: Real operations extend to vectors \underline{element-by-element}
+    %Convention: Real operations extend to vectors \underline{element-by-element}
 
-    \vspace{1em}
-    \Eg
-    %
-    \begin{equation*}
-        a = 
-        \begin{pmatrix}
-            a_1 \\
-            \vdots \\
-            a_n
-        \end{pmatrix}
-        \quad \implies \quad
-        |a| = 
-        \begin{pmatrix}
-            |a_1| \\
-            \vdots \\
-            |a_n|
-        \end{pmatrix}
-    \end{equation*}
-    %
+    %\vspace{1em}
+    %\Eg
+    %%
+    %\begin{equation*}
+        %a = 
+        %\begin{pmatrix}
+            %a_1 \\
+            %\vdots \\
+            %a_n
+        %\end{pmatrix}
+        %\quad \implies \quad
+        %|a| = 
+        %\begin{pmatrix}
+            %|a_1| \\
+            %\vdots \\
+            %|a_n|
+        %\end{pmatrix}
+    %\end{equation*}
+    %%
 
-    \vspace{1em}
+    %\vspace{1em}
 
-    %
-    \begin{equation*}
-        a \vee b = 
-        \begin{pmatrix}
-            a_1 \vee b_1 \\
-            \vdots \\
-            a_n \vee b_n 
-        \end{pmatrix}
-    \end{equation*}
-    %
+    %%
+    %\begin{equation*}
+        %a \vee b = 
+        %\begin{pmatrix}
+            %a_1 \vee b_1 \\
+            %\vdots \\
+            %a_n \vee b_n 
+        %\end{pmatrix}
+    %\end{equation*}
+    %%
 
-    etc.
+    %etc.
 
-\end{frame}
+%\end{frame}
 
 
 
@@ -208,7 +208,7 @@
 
 
 \begin{frame}
-    \frametitle{Fixed Points}    
+    \frametitle{Fixed points}    
 
     To solve \underline{nonlinear} equations we use fixed point theory
 
@@ -240,12 +240,10 @@
 
 \begin{frame}
     
-    \Egs
+    \Eg
     %
     \begin{itemize}
-        \item If $S = \RR$ and $Tx = x^2$, then $T$ has fixed points at $0, 1$
-        \vspace{1em}
-        \item If $S \subset \RR$,  $Tx =x$ $\iff$ $T$ meets the 45 degree line
+        \item If $S \subset \RR$, then  $Tx =x$ $\iff$ $T$ meets the 45 degree line
     \end{itemize}
 
 
@@ -366,7 +364,16 @@
     
     \begin{figure}
        \centering
-       \scalebox{0.2}{\includegraphics{local_figs/solow_fp.pdf}}
+       \scalebox{0.6}{\includegraphics{local_figs/solow_fp_1.pdf}}
+    \end{figure}
+
+\end{frame}
+
+\begin{frame}
+    
+    \begin{figure}
+       \centering
+       \scalebox{0.6}{\includegraphics{local_figs/solow_fp_2.pdf}}
     \end{figure}
 
 \end{frame}
@@ -459,7 +466,7 @@
 
 
 \begin{frame}
-    \frametitle{Banach's Contraction Mapping Theorem}
+    \frametitle{Banach's contraction mapping theorem}
     
     {\bf Theorem} If 
     %
@@ -656,6 +663,12 @@
 \end{frame}
 
 
+\begin{frame}
+    
+    See the notebook \texttt{solow\_fixed\_points.ipynb}
+
+\end{frame}
+
 
 
 \begin{frame}
@@ -678,10 +691,7 @@
     \end{itemize}
 
     \vspace{0.5em}
-    We begin with a very simple version of the McCall model 
-
-    \vspace{0.5em}
-    (Later we consider extensions)
+    We use a very simple version of the McCall model 
 
 \end{frame}
 
@@ -689,29 +699,22 @@
 \begin{frame}
     \frametitle{Set Up}
     
-    An agent begins working life at time $t=0$ without employment  
+    An agent begins working life unemployed at $t=0$ 
 
             \vspace{0.5em}
     Receives a new job offer paying wage $w_t$ at each date $t$  
             \vspace{0.5em}
+            \vspace{0.5em}
 
-    She has two choices:
+    Two choices:
     %
     \begin{enumerate}
         \item \emp{accept} the offer and work \underline{permanently} at $w_t$ or
             \vspace{0.5em}
+            \vspace{0.5em}
         \item \emp{reject} the offer, receive unemployment compensation $c$, and reconsider next period
     \end{enumerate}
 
-            \vspace{0.5em}
-    Assume $\{w_t\}$ is $\iidsim \phi$, where
-    %
-    \begin{itemize}
-        \item $\Wsf \subset \RR_+$ is a finite set of wage outcomes and
-            \vspace{0.5em}
-        \item $\phi \in \dD(\Wsf)$
-    \end{itemize}
-    %
 
 \end{frame}
 
@@ -762,8 +765,6 @@
         \vspace{0.4em}
         \item $\Wsf \subset \RR_+$ with $|\Wsf| < \infty$
         \vspace{0.4em}
-        \item $c$ and $\beta$ are positive and $\beta < 1$
-        \vspace{0.4em}
         \item jobs are \underline{permanent} 
     \end{itemize}
 
@@ -793,7 +794,8 @@
         \text{EPV }
         & = \text{continuation value }
         \\
-        & = \text{$c$ + EPV of \underline{optimal} choice in subsequent periods}
+        & = \text{$c$ + $\beta \times$ EPV of 
+        \underline{optimal} choice in subsequent periods}
     \end{align*}
 
         \vspace{0.4em}
@@ -957,7 +959,7 @@
     Let $\vV := \RR^\Wsf_+$ 
 
         \vspace{0.5em}
-    {\bf Proposition.} $T$ is a contraction $\vV$
+    {\bf Proposition.} $T$ is a contraction on $\vV$
         with respect to $\| \cdot \|_\infty$
 
         \vspace{0.5em}
@@ -1016,7 +1018,7 @@
     \Wsf$, is 
     %
     \begin{equation*}
-        \1 \left\{ \frac{w}{1-\beta} \geq h^* \right\}
+        \sigma^*(w) := \1 \left\{ \frac{w}{1-\beta} \geq h^* \right\}
     \end{equation*}
 
     \vspace{1em}
@@ -1030,16 +1032,16 @@
 
 \begin{frame}
     
-    For job search model, 
+    For the job search model, 
     %
     \begin{itemize}
-        \item state $=$ current wage offer and 
-        \item possible actions are accept (1) or reject (0)
+        \item \navy{states} $=$ set of wage offers 
+        \item possible \navy{actions} are accept (1) or reject (0)
     \end{itemize}
 
-    A policy is a map $\sigma$ from $\Wsf$ to $\{0,1\}$
+    A \navy{policy} is a map from states to actions
 
-    Let $\Sigma$ be the set of all such maps
+    Let $\Sigma$ be all $\sigma \colon \Wsf \to \{0, 1\}$
 
     For each $v \in \vV$, let us define a \navy{$v$-greedy
     policy} to be a $\sigma \in \Sigma$ satisfying
@@ -1069,7 +1071,7 @@
     \begin{itemize}
         \item agent should adopt a $v^*$-greedy policy
             \vspace{0.5em}
-        \item Sometimes called \navy{Bellman's principle of optimality}
+        \item this is \navy{Bellman's principle of optimality}
     \end{itemize}
 
 
