@@ -36,6 +36,12 @@
             \vspace{0.3em}
             \vspace{0.3em}
 
+    Resources:
+    %
+    \begin{itemize}
+        \item Slides and DP textbook at \url{https://github.com/jstac/paris_workshop_2022}
+    \end{itemize}
+
     %\emp{Lecture slides at} \url{https://github.com/jstac/tokyo_2022_coursework}
 
 \end{frame}
@@ -409,22 +415,7 @@
 
 \begin{frame}
 
-    Given a self-map $T$ on $S$, we typically ask
-    %
-    \begin{itemize}
-        \item Does $T$ have at least one fixed point on $S$ (existence)?
-    \vspace{0.3em}
-        \item Does $T$ have at most one fixed point on $S$ (uniqueness)?
-    \vspace{0.3em}
-        \item How can we compute fixed points of $T$?
-    \end{itemize}
-
-    \vspace{0.3em}
-    For the last question, we seek an algorithm
-
-    \vspace{0.3em}
-    \vspace{0.3em}
-    Then we investigate its properties
+    Under what conditions are self-maps globally stable?
 
 \end{frame}
 
@@ -434,12 +425,19 @@
     Let 
     %
     \begin{itemize}
-        \item $U$ be a nonempty subset of $\RR^n$,
-        \item $\| \cdot \|$ be a norm on $\RR^n$, and
+        \item $U$ be a nonempty subset of $\RR^n$
+    \vspace{0.3em}
+    \vspace{0.3em}
+        \item $\| \cdot \|$ be a norm on $\RR^n$
+    \vspace{0.3em}
+    \vspace{0.3em}
         \item $T$ be a self-map on $U$
 
     \end{itemize}
 
+    \vspace{0.3em}
+    \vspace{0.3em}
+    \vspace{0.3em}
     $T$ is called a \navy{contraction} on $U$ with respect
     to $\| \cdot \|$ if 
     %
@@ -449,14 +447,14 @@
     \end{equation*}
     %
 
-    \Eg $Tx = ax + b$ is a contraction on $\RR$ with respect to $| \cdot |$ 
-    if and only if $|a|<1$
+    %\Eg $Tx = ax + b$ is a contraction on $\RR$ with respect to $| \cdot |$ 
+    %if and only if $|a|<1$
 
-    Indeed, 
-    %
-    \begin{equation*}
-        |Tx - Ty| = |ax + b - ay - b| = |a| |x -y|
-    \end{equation*}
+    %Indeed, 
+    %%
+    %\begin{equation*}
+        %|Tx - Ty| = |ax + b - ay - b| = |a| |x -y|
+    %\end{equation*}
     
 
 
@@ -485,9 +483,6 @@
     %
     In particular, $T$ is globally stable on $U$
 
-    \vspace{1em}
-
-    \underline{Proof}: See the DP text
 
 \end{frame}
 
@@ -553,15 +548,15 @@
     Let $g$ be a smooth self-map on $S := (a, b)$ 
 
     \vspace{0.3em}
-    We start with guess $x_0$ of the fixed point and update it
-    using
+    We start with guess $x_0$ of the fixed point and define
+    %
     $$g_a(x) \approx g(x_0) + g'(x_0)(x - x_0)$$
 
     \vspace{0.3em}
     Set $g_a(x_1) = x_1$ and solve for $x_1$ to get
     %
     \begin{equation*}
-        x_1 = \frac{x_0 - g'(x_0) x_0}{1 - g'(x_0)}
+        x_1 = \frac{g(x_0) - g'(x_0) x_0}{1 - g'(x_0)}
     \end{equation*}
 
     Now repeat logic to get $x_2, x_3, \ldots $
@@ -570,26 +565,27 @@
 
 \begin{frame}
 
-    This gives \navy{Newton's method}
-
-    \vspace{0.3em}
-    \vspace{0.3em}
-    We are iterating on the map
-    %
+    In other words, we iterate on $x_{k+1} = q(x_k)$ where
+    
     \begin{equation*}
-        x_{k+1} = q(x_k) 
-        \quad \text{where} \quad
-        q(x) := \frac{x - g'(x) x}{1 - g'(x)}
+        q(x) := \frac{g(x) - g'(x) x}{1 - g'(x)}
     \end{equation*}
     %
 
     \vspace{0.3em}
-    Note that we are applying successive approximation to $q$
+    \vspace{0.3em}
+    \vspace{0.3em}
+    \vspace{0.3em}
+    \vspace{0.3em}
+    Note:
+    \begin{itemize}
+        \item we are applying successive approximation to $q$
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \item Hence we can use the same code
+    \end{itemize}
 
-    \vspace{0.3em}
-    \vspace{0.3em}
-    \vspace{0.3em}
-    Hence we can use the same code
+
 
 \end{frame}
 
@@ -702,18 +698,24 @@
     An agent begins working life unemployed at $t=0$ 
 
             \vspace{0.5em}
-    Receives a new job offer paying wage $w_t$ at each date $t$  
+    Receives a new job offer paying wage $W_t$ at each date $t$  
             \vspace{0.5em}
             \vspace{0.5em}
 
     Two choices:
     %
     \begin{enumerate}
-        \item \emp{accept} the offer and work \underline{permanently} at $w_t$ or
-            \vspace{0.5em}
+        \item \emp{accept} the offer and work \underline{permanently} at $W_t$ or
             \vspace{0.5em}
         \item \emp{reject} the offer, receive unemployment compensation $c$, and reconsider next period
     \end{enumerate}
+
+            \vspace{0.5em}
+            \vspace{0.5em}
+    \begin{itemize}
+        \item $\{ W_t \} \iidsim \phi$ for $\phi \in \dD(\Wsf)$ where $\Wsf
+            \subset \RR_+$ with $|\Wsf| < \infty$
+    \end{itemize}
 
 
 \end{frame}
@@ -722,7 +724,7 @@
 
 \begin{frame}
 
-    The agent cares about the future but is \emp{impatient}
+    The agent lives forever (infinite horizon) but is \emp{impatient}
 
             \vspace{0.5em}
     Impatience is parameterized by a \navy{time discount factor} $\beta \in (0, 1)$
@@ -749,32 +751,10 @@
 \end{frame}
 
 
-\begin{frame}
-    
-    The worker who aims to maximize 
-    %
-    \begin{equation}
-        \EE \sum_{t=0}^{\infty} \beta^t Y_t,
-        \quad 
-        \text{$Y_t \in \{c, W_t\}$ is earnings at time $t$}
-    \end{equation}
-
-        \vspace{0.4em}
-    \begin{itemize}
-        \item $\{ W_t \} \iidsim \phi$ for $\phi \in \dD(\Wsf)$ 
-        \vspace{0.4em}
-        \item $\Wsf \subset \RR_+$ with $|\Wsf| < \infty$
-        \vspace{0.4em}
-        \item jobs are \underline{permanent} 
-    \end{itemize}
-
-
-\end{frame}
-
 
 \begin{frame}
     
-    What is max EPV of each option when lifetime is infinite?  
+    The worker aims to maximize expected present value (EPV) of earnings
 
         \vspace{0.4em}
     If we \emp{accept} $w \in \Wsf$,
@@ -795,7 +775,7 @@
         & = \text{continuation value }
         \\
         & = \text{$c$ + $\beta \times$ EPV of 
-        \underline{optimal} choice in subsequent periods}
+        \underline{optimal} choices in subsequent periods}
     \end{align*}
 
         \vspace{0.4em}
@@ -835,6 +815,8 @@
         \right\}
     \end{equation*}
 
+
+    (Here 1 means ``accept'' and 0 means ``reject'')
 
 \end{frame}
 
@@ -1011,28 +993,11 @@
 
 \end{frame}
 
-\begin{frame}
-    \frametitle{Optimal Choice}
-    
-    Recall: The optimal decision at any given time, facing current wage draw $w \in
-    \Wsf$, is 
-    %
-    \begin{equation*}
-        \sigma^*(w) := \1 \left\{ \frac{w}{1-\beta} \geq h^* \right\}
-    \end{equation*}
-
-    \vspace{1em}
-
-    Let's try to write this in the language of dynamic programming
-    
-
-\end{frame}
-
 
 
 \begin{frame}
+    \frametitle{Choices as policies}
     
-    For the job search model, 
     %
     \begin{itemize}
         \item \navy{states} $=$ set of wage offers 
@@ -1066,34 +1031,63 @@
 
 \begin{frame}
     
-    Optimal choice:
+
+    The \emp{optimal policy} is
     %
-    \begin{itemize}
-        \item agent should adopt a $v^*$-greedy policy
+    \begin{equation*}
+        \sigma^*(w) 
+        = \1
+        \left\{
+            \frac{w}{1-\beta}
+            \geq
+            c + \beta \, \sum_{w' \in \Wsf} v^*(w') \phi(w')
+        \right\}
+        \quad \text{for all } w \in \Wsf
+    \end{equation*}
+
+    In other words
+    %
+    \begin{center}
+        $\sigma \in \Sigma$ is optimal
+        $\iff$
+        $\sigma$ is $v^*$-greedy policy
+    \end{center}
+
             \vspace{0.5em}
-        \item this is \navy{Bellman's principle of optimality}
-    \end{itemize}
+    This is \navy{Bellman's principle of optimality}
 
 
-            \vspace{0.5em}
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Reservation wage}
+    
+
             \vspace{0.5em}
     We can also express a $v^*$-greedy policy via
     %
-    \begin{equation}
-        \label{eq:opjs3d}
+    \begin{equation*}
         \sigma^*(w) 
         = \1
         \left\{
             w \geq w^*
         \right\}
-        \quad \text{where } \;
-        w^* := (1 - \beta) h^* 
-    \end{equation}
+    \end{equation*}
     %
+
+    where
+    %
+    \begin{equation*}
+        w^* := (1 - \beta) h^* 
+        \quad \text{with} \quad
+        h^* 
+        := c + \beta \, \sum_{w' \in \Wsf} \, v^*(w') \phi(w') 
+    \end{equation*}
 
             \vspace{0.5em}
             \vspace{0.5em}
-    The term $w^*$ in \eqref{eq:opjs3d} is called the \navy{reservation
+    The term $w^*$ is called the \navy{reservation
     wage}
 
     \begin{itemize}
@@ -1101,7 +1095,6 @@
     \end{itemize}
 
 \end{frame}
-
 
 \begin{frame}
     \frametitle{Computation}

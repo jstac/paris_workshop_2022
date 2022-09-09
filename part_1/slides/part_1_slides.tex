@@ -1,7 +1,7 @@
 \input{../../slides_preamb.tex}
 
 
-\subtitle{Introduction (and why Python?)}
+\subtitle{Introduction}
 
 \author{John Stachurski}
 
@@ -24,9 +24,8 @@
 
 
 \begin{frame}
-    %\frametitle{Introduction}
+    \frametitle{Plan}
 
-    \textbf{Today}
 
     \begin{itemize}
         \item Introduction to scientific computing with Python
@@ -55,14 +54,25 @@
         \item You have read lectures 1-3 at
             %
             \begin{center}
-                \texttt{https://python-programming.quantecon.org/intro.html}
+                \url{https://python-programming.quantecon.org/intro.html}
             \end{center}
         \vspace{0.3em}
+        \vspace{0.3em}
         \item some basic familiarity with programming
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \item linear algebra, multivariate calculus, etc.
     \end{itemize}
 
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+    Resources:
+
     \begin{itemize}
-        \item \url{https://github.com/QuantEcon/rse_comp_econ_2022}
+        \item \url{https://github.com/jstac/paris_workshop_2022}
     \end{itemize}
 
 
@@ -75,31 +85,28 @@
 
 
 \begin{frame}
-    \frametitle{Background --- Language Types}
-    
-    \navy{Proprietary} 
-    %
-    \begin{itemize}
-        \item Excel
-        \item MATLAB
-        \item STATA, etc.
-    \end{itemize}
-    
+    \frametitle{Background}
 
-    \vspace{0.5em}
-    \vspace{0.5em}
-    \navy{Open Source} 
-    
-    \begin{itemize}
-        \item Python
-        \item Julia
-        \item R
-    \end{itemize}
+    The theme of these lectures is dynamic programming in Python
 
 
-    \begin{center}
-        closed and stable vs open and fast moving
-    \end{center}
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+    Why use Python for DP?
+
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+    In fact, why use Python for scientific computing?
+
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+        \vspace{0.3em}
+    Let's compare Python to some of the alternatives
 
 \end{frame}
 
@@ -108,14 +115,14 @@
 
 
 \begin{frame}
-    \frametitle{Background --- Language Types}
+    \frametitle{Language Types}
     
     \navy{Low level } 
     
     \begin{itemize}
         \item C/C++
         \item Fortran
-        \item Rust
+        \item assembly
     \end{itemize}
 
     \vspace{1em}
@@ -250,88 +257,6 @@ popq    %rbp
 
 
 
-\section{Trends}
-
-\begin{frame}
-    \frametitle{Trend 1: Parallelization}
-
-    CPU frequency (clock speed) growth is slowing
-
-    \begin{figure}
-       \begin{center}
-        \scalebox{.22}{\includegraphics{processor_clock.png}}
-       \end{center}
-    \end{figure}
-
-\end{frame}
-
-
-\begin{frame}
-    
-    Chip makers have responded by developing multi-core processors
-
-    \begin{figure}
-       \begin{center}
-        \scalebox{.2}{\includegraphics{dual_core.png}}
-       \end{center}
-    \end{figure}
-
-    Source: Wikipedia
-
-
-\end{frame}
-
-
-\begin{frame}
-
-    \navy{GPUs / ASICs} are also becoming increasingly important
-
-
-    \begin{figure}
-       \begin{center}
-        \scalebox{.16}{\includegraphics{gpu.jpg}}
-       \end{center}
-    \end{figure}
-
-    \vspace{0.5em}
-
-    Applications: machine learning, deep learning, etc.
-    
-
-\end{frame}
-
-
-
-\begin{frame}
-    \frametitle{Trend 2: Distributed Computing}
-    
-    Advantages: 
-    %
-    \begin{itemize}
-        \item run code on big machines we don't have to buy
-        \vspace{0.5em}
-        \item customized execution environments
-        \vspace{0.5em}
-        \item circumvent annoying internal IT departments
-    \end{itemize}
-
-    \vspace{0.5em}
-
-    Options:
-    %
-    \begin{itemize}
-        \item University machines
-            \vspace{0.5em}
-        \item AWS 
-            \vspace{0.5em}
-        \item Google Colab, etc.
-    \end{itemize}
-
-\end{frame}
-
-
-
-
 \section{Which Language?}
 
 
@@ -359,7 +284,7 @@ popq    %rbp
 
 \begin{frame}
     
-    However loosing ground to Python
+    Loosing some ground to Python
             \vspace{0.5em}
             \vspace{0.5em}
             \vspace{0.5em}
@@ -396,7 +321,7 @@ popq    %rbp
     \begin{itemize}
         \item Some stability issues
             \vspace{0.5em}
-        \item Failing to achieve rapid growth
+        \item Yet to achieve rapid growth
     \end{itemize}
 
 \end{frame}
@@ -406,48 +331,57 @@ popq    %rbp
 
 \begin{frame}
     \frametitle{Python}
+
+    Pros:
     
     \begin{itemize}
-        \item Easy to learn, well designed
-            \vspace{0.5em}
         \item Massive scientific ecosystem
             \vspace{0.5em}
-        \item Heavily supported by big players
-            \vspace{0.5em}
-        \item Open source
+        \item Strong investment from Google, Facebook (Meta), etc.
             \vspace{0.5em}
         \item Huge demand for tech-savvy Python programmers
     \end{itemize}
 
-\end{frame}
 
-
-
-
-\begin{frame}
-    \frametitle{Scientific Computing}
+            \vspace{0.5em}
+            \vspace{0.5em}
+    Cons:
     
-    Python has strong tools in vectorization / JIT compilation /
-    parallelization / visualization / etc.
-
-    Examples:
-
     \begin{itemize}
-        \item SciPy, NumPy, Matplotlib, pandas
+        \item Numerical code not as clean as Julia
             \vspace{0.5em}
-        \item Numba (JIT compilation, multithreading)
-            \vspace{0.5em}
-        \item Tensorflow, PyTorch (machine learning, AI)
-            \vspace{0.5em}
-        \item JAX (JIT compilation, parallelization), etc., etc.
+        \item Econometrics libraries less developed than R/STATA
     \end{itemize}
 
 \end{frame}
 
+
+
+
+%\begin{frame}
+    %\frametitle{Scientific Computing}
+    
+    %Python has strong tools in vectorization / JIT compilation /
+    %parallelization / visualization / etc.
+
+    %Examples:
+
+    %\begin{itemize}
+        %\item SciPy, NumPy, Matplotlib, pandas
+            %\vspace{0.5em}
+        %\item Numba (JIT compilation, multithreading)
+            %\vspace{0.5em}
+        %\item Tensorflow, PyTorch (machine learning, AI)
+            %\vspace{0.5em}
+        %\item JAX (JIT compilation, parallelization), etc., etc.
+    %\end{itemize}
+
+%\end{frame}
+
 \begin{frame}
     
 
-    Popularity, others vs one Python library (pandas)
+    Popularity, others vs \underline{one} Python library (pandas)
 
     \begin{figure}
        \begin{center}
@@ -463,6 +397,90 @@ popq    %rbp
 
 
 
+\section{Trends}
+
+\begin{frame}
+    \frametitle{Current Trend 1: Parallelization}
+
+    CPU frequency (clock speed) growth is slowing
+
+    \begin{figure}
+       \begin{center}
+        \scalebox{.22}{\includegraphics{processor_clock.png}}
+       \end{center}
+    \end{figure}
+
+\end{frame}
+
+
+\begin{frame}
+    
+    Chip makers have responded by developing multi-core processors
+
+    \begin{figure}
+       \begin{center}
+        \scalebox{.2}{\includegraphics{dual_core.png}}
+       \end{center}
+    \end{figure}
+
+    Source: Wikipedia
+
+
+\end{frame}
+
+
+\begin{frame}
+
+    \navy{GPUs / TPUs} are becoming more and more important
+
+
+    \begin{figure}
+       \begin{center}
+        \scalebox{.14}{\includegraphics{gpu.jpg}}
+       \end{center}
+    \end{figure}
+
+    \vspace{0.5em}
+
+    Applications: 
+    \begin{itemize}
+        \item machine learning, deep learning, etc.
+        \item dynamic programming!
+    \end{itemize}
+    
+
+\end{frame}
+
+
+
+\begin{frame}
+    \frametitle{Trend 2: Distributed Computing}
+    
+    Advantages: 
+    %
+    \begin{itemize}
+        \item run code on big machines we don't have to buy
+        \vspace{0.5em}
+        \item circumvent internal IT departments
+    \end{itemize}
+
+    \vspace{0.5em}
+
+    Options:
+    %
+    \begin{itemize}
+        \item Google Colab, PythonAnywhere, etc.
+            \vspace{0.5em}
+        \item AWS 
+            \vspace{0.5em}
+        \item Supercomputers
+    \end{itemize}
+
+\end{frame}
+
+
+
+
 
 
 \section{Set Up}
@@ -474,19 +492,19 @@ popq    %rbp
 
 
 \begin{frame}
-    \frametitle{Downloads / Installation / Troubleshooting}
+    \frametitle{Downloads / Installation / Remote Options}
 
-    \green{Install Python + Scientific Libs (Optional!)}
+    \green{Install Python + scientific libraries (optional)}
     
     \begin{itemize}
         \item Install Anaconda from {\footnotesize \url{https://www.anaconda.com/}}
-        \vspace{1em}
+        \vspace{0.5em}
             \begin{itemize}
                 \item Select latest version 
                 \item For your OS
                 \item Say ``yes'' at prompts
             \end{itemize}
-        \vspace{1em}
+        \vspace{0.5em}
         \item Not plain vanilla Python
     \end{itemize}
 
@@ -497,7 +515,6 @@ popq    %rbp
 
     \begin{itemize}
         \item \url{https://colab.research.google.com}
-        \item \url{https://www.pythonanywhere.com/}
     \end{itemize}
 
 
@@ -506,47 +523,16 @@ popq    %rbp
 
 
 \begin{frame}
-    \frametitle{Jupyter Notebooks}
+    \frametitle{Notebooks}
 
-    A browser based interface to Python / Julia / R / etc.
-
-
-    \vspace{2em}
-
+    Now let's move on to
+    %
     \begin{itemize}
-        \item Search for \texttt{jupyter notebook}
-    \end{itemize}
-
-    \vspace{2em}
-
-    Useful for:
-
-    \begin{itemize}
-        \item getting started
-        \item exploring ideas
-    \end{itemize}
-
-
-
-
-
-\end{frame}
-
-
-
-\begin{frame}
-    \frametitle{Working with Notebooks}
-
-    \begin{itemize}
-        \item Entry and execution
-    \vspace{1em}
-        \item Markdown
-    \vspace{1em}
-        \item Getting help
-    \vspace{1em}
-        \item Copy paste
-    \vspace{1em}
-        \item Edit and command mode
+        \item \texttt{python\_by\_example.ipynb}
+        \item \texttt{finite\_markov.ipynb}
+        \item \texttt{equilibrium.ipynb}
+        \item \texttt{numba.ipynb}
+        \item \texttt{european\_option\_numba.ipynb}
     \end{itemize}
 
 \end{frame}
