@@ -248,7 +248,7 @@
         \right\}
     \end{equation*}
 
-    The fixed point $v^*$ equals the value function
+    The solution $v^*$ equals the value function
 
 \end{frame}
 
@@ -473,7 +473,7 @@
     \Eg For the inventory problem we set 
     %
     \begin{itemize}
-        \item $\Gamma(x) := \{0, \ldots, K - x\}$,
+        \item $\Gamma(x) := \{0, \ldots, K - x\}$
         \vspace{0.3em}
         \item $\vV = \RR^\Xsf$ and
         %
@@ -507,7 +507,7 @@
     \Eg For the savings problem we set 
     %
     \begin{itemize}
-        \item $\Gamma(w, y) := \{w' \in \Wsf \,:\, w' \leq Rw + y\}$,
+        \item $\Gamma(w, y) := \{w' \in \Wsf \,:\, w' \leq Rw + y\}$
         \vspace{0.3em}
         \item $\vV = \RR^\Xsf$ and
         %
@@ -590,7 +590,7 @@
               \vspace{0.5em}
               \vspace{0.5em}
 
-    Why is this valid?
+    Why is this interpretation valid?
 
 \end{frame}
 
@@ -685,7 +685,7 @@
         \vspace{0.5em}
 
     Below we impose conditions under which $T_\sigma$ always has a unique
-    fixed point, denoted by $v_\sigma$
+    fixed point, \navy{denoted by $v_\sigma$}
 
         \vspace{0.5em}
         \vspace{0.5em}
@@ -1044,6 +1044,12 @@
     \end{algorithm}
     }
 
+        \vspace{1em}
+        \vspace{1em}
+    \begin{itemize}
+        \item In fact this is Newton's algorithm applied to $T$!
+    \end{itemize}
+
 \end{frame}
 
 \begin{frame}
@@ -1131,13 +1137,15 @@
     Regarding $m$,
     %
     \begin{itemize}
-        \item If $m=\infty$, OPI is identical to HPI
+        \item $m=\infty \, \implies$ OPI $=$ HPI
     \vspace{0.5em}
-        \item If $m=1$, OPI is identical to VFI
+        \item $m=1 \, \implies$ OPI $=$ VFI
     \end{itemize}
 
     \vspace{0.5em}
-    Usually, an intermediate value of $m$ is better than both
+    \vspace{0.5em}
+    \vspace{0.5em}
+    Often an intermediate value of $m$ is better than both
 
 
 \end{frame}
@@ -1150,7 +1158,7 @@
     \begin{itemize}
         \item \texttt{investment.ipynb}
     \vspace{0.5em}
-        \item \texttt{consumption.ipynb}
+        \item \texttt{opt\_savings.ipynb}
     \end{itemize}
 
 \end{frame}
