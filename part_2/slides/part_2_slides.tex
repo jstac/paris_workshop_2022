@@ -263,7 +263,7 @@
         \centering
         \scalebox{0.45}{\includegraphics{local_figs/three_fixed_points.pdf}}
         \caption{\label{f:three_fixed_points} 
-            Graph and fixed points of $G \colon x \mapsto 2.125/(1 + x^{-4})$ }
+            Graph and fixed points of $T \colon x \mapsto 2.125/(1 + x^{-4})$ }
     \end{figure}
 
 \end{frame}
@@ -272,12 +272,8 @@
 \begin{frame}
 
     \emp{Key idea}: Fixed point theory is for solving equations
-    %
-    \begin{enumerate}
-        \item solve $x = Tx$ $\iff$ find fixed points of $T$
-        \item solve $Gx = 0$ $\iff$ find fixed points of $Tx = Gx + x$
-    \end{enumerate}
 
+    \vspace{1em}
     \vspace{1em}
 
     \Eg If $S = \RR^n$ and $T x = Ax + b$, then 
@@ -290,7 +286,12 @@
 
 
     \vspace{1em}
-    (But fixed point theory is mainly for nonlinear equations)
+
+    \Eg  If $G \colon \RR^n \to \RR^n$, then
+    %
+    \begin{center}
+        solve $Gx = 0$ $\iff$ find fixed points of $Tx = Gx + x$
+    \end{center}
 
     
 \end{frame}
@@ -548,22 +549,36 @@
     Let $g$ be a smooth self-map on $S := (a, b)$ 
 
     \vspace{0.3em}
+    \vspace{0.3em}
     We start with guess $x_0$ of the fixed point and define
     %
-    $$g_a(x) \approx g(x_0) + g'(x_0)(x - x_0)$$
+    $$\hat g(x) \approx g(x_0) + g'(x_0)(x - x_0)$$
 
     \vspace{0.3em}
-    Set $g_a(x_1) = x_1$ and solve for $x_1$ to get
+    Set $\hat g(x_1) = x_1$ and solve for $x_1$ to get
     %
     \begin{equation*}
         x_1 = \frac{g(x_0) - g'(x_0) x_0}{1 - g'(x_0)}
     \end{equation*}
 
-    Now repeat logic to get $x_2, x_3, \ldots $
+\end{frame}
+
+
+\begin{frame}
+
+    \begin{figure}
+       \centering
+       \scalebox{0.5}{\includegraphics{local_figs/newton_1.pdf}}
+       \caption{\label{f:newton_1} The first step of Newton's method applied to $g$}
+    \end{figure}
 
 \end{frame}
 
 \begin{frame}
+
+    Now repeat logic to get $x_2, x_3, \ldots $
+    \vspace{0.3em}
+    \vspace{0.3em}
 
     In other words, we iterate on $x_{k+1} = q(x_k)$ where
     
@@ -572,7 +587,6 @@
     \end{equation*}
     %
 
-    \vspace{0.3em}
     \vspace{0.3em}
     \vspace{0.3em}
     \vspace{0.3em}
@@ -1314,6 +1328,12 @@
             \vspace{1em}
             \vspace{1em}
     \Ex Implement and compare timing with VFI
+            \vspace{1em}
+
+
+    \begin{itemize}
+        \item See the notebook \texttt{job\_search.ipynb}
+    \end{itemize}
 
 \end{frame}
 
